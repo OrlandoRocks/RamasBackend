@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Description: CreateLands migration that creates a table with a residential_id, type,
+# address, block, size, price, and house_number columns.
 class CreateLands < ActiveRecord::Migration[7.0]
   def change
     create_table :lands do |t|

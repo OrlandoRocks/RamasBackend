@@ -1,5 +1,7 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-RSpec.describe Contract, type: :model do
+require "rails_helper"
+
+RSpec.describe Contract do
   pending "add some examples to (or delete) #{__FILE__}"
 end

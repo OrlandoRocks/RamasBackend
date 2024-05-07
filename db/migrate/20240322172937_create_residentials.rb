@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Description: Residential model that belongs to a user.
 class CreateResidentials < ActiveRecord::Migration[7.0]
   def change
     create_table :residentials do |t|

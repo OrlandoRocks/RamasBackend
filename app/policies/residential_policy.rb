@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
+# Policy for residential
 class ResidentialPolicy < ApplicationPolicy
+  # Scope class for residential
   class Scope < Scope
     def resolve
       scope.all

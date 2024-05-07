@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Description: Payment model that belongs to a land.
 class CreatePayments < ActiveRecord::Migration[7.0]
   def change
     create_table :payments do |t|

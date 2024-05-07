@@ -4,7 +4,7 @@
 class Land < ApplicationRecord
   belongs_to :residential
 
-  has_one :contract
+  has_one :contract, dependent: :nullify
   has_one :client, through: :contract
-  has_many :payments
+  has_many :payments, dependent: :nullify
 end

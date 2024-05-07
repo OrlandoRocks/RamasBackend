@@ -10,4 +10,3 @@ module RequestSpecHelper
     JwtService.encode({ user_id: user.id })
   end
 end
-

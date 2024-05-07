@@ -1,4 +1,6 @@
-#
+# frozen_string_literal: true
+
+# Handles the users of the application
 class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create]
 

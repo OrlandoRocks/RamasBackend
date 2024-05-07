@@ -1,0 +1,39 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+  Exclude:
+    - bin/*
+    - config/**/*
+    - db/**/*
+    - lib/**/*
+    - tmp/**/*
+    - log/**/*
+    - spec/*
+
+Layout/LineLength:
+  Max: 120
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Metrics/MethodLength:
+  Max: 15
+
+RSpec/ExampleLength:
+  Max: 7
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*

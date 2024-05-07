@@ -5,5 +5,5 @@ class Contract < ApplicationRecord
   belongs_to :client
   belongs_to :land
 
-  has_many :users
+  has_many :users, dependent: :nullify
 end

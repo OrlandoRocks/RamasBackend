@@ -1,6 +1,8 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-RSpec.describe "Clients", type: :request do
+require "rails_helper"
+
+RSpec.describe "Clients" do
   describe "GET /index" do
     pending "add some examples (or delete) #{__FILE__}"
   end

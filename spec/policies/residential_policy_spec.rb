@@ -1,9 +1,11 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe ResidentialPolicy, type: :policy do
-  let(:user) { User.new }
-
   subject { described_class }
+
+  let(:user) { User.new }
 
   permissions ".scope" do
     pending "add some examples to (or delete) #{__FILE__}"

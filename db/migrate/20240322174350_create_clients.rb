@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
+# Description: Migration that creates the clients table.
 class CreateClients < ActiveRecord::Migration[7.0]
-  def change
+  def change # rubocop:disable Metrics/MethodLength
     create_table :clients do |t|
       t.string :code
       t.string :full_name

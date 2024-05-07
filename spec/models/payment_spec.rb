@@ -1,5 +1,7 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-RSpec.describe Payment, type: :model do
+require "rails_helper"
+
+RSpec.describe Payment do
   pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# controller for residentials model
+# Handles the residentials of the application
 class ResidentialsController < ApplicationController
   before_action :set_residential, only: %i[show update destroy]
 
