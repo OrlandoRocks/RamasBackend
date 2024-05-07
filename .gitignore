@@ -1,0 +1,15 @@
+.env*
+!.env.template
+
+*.dump
+!/spec/fixtures/**/*.dump
+
+.yardoc/
+pkg/
+tmp/
+coverage/
+spec/coverage/
+spec/reports/
+
+# rspec failure tracking
+.rspec_status
