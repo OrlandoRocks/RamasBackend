@@ -209,3 +209,5 @@ FOREIGN KEY ("role_id")
 [dotenv] Loaded [33m.env[0m
   [1m[36mActiveRecord::InternalMetadata Pluck (5.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
   [1m[36mActiveRecord::SchemaMigration Pluck (3.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m

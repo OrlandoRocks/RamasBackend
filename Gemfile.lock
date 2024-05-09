@@ -265,6 +265,12 @@ GEM
       parser (>= 3.3.1.0)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
+    rubocop-discourse (3.7.1)
+      activesupport (>= 6.1)
+      rubocop (>= 1.59.0)
+      rubocop-capybara (>= 2.0.0)
+      rubocop-factory_bot (>= 2.0.0)
+      rubocop-rspec (>= 2.25.0)
     rubocop-factory_bot (2.25.1)
       rubocop (~> 1.41)
     rubocop-performance (1.21.0)
@@ -338,6 +344,7 @@ DEPENDENCIES
   rspec-rails (~> 5.0.0)
   rspec_junit_formatter
   rubocop
+  rubocop-discourse
   rubocop-performance
   rubocop-rails
   rubocop-rspec

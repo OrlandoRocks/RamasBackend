@@ -2,28 +2,41 @@
 
 require "rails_helper"
 
-RSpec.describe ResidentialPolicy, type: :policy do
+RSpec.describe ResidentialPolicy do
+  let(:admin) { User.new(role: 'admin') }
+  let(:user) { User.new(role: 'user') }
+  let(:another_user) { User.new(role: 'user') }
+  let(:residential) { Residential.new(user: user) }
+
   subject { described_class }
 
-  let(:user) { User.new }
+  describe 'Scope' do
+    let(:scope) { Residential.all }
 
-  permissions ".scope" do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it 'resuelve todos los registros' do
+      expect(subject::Scope.new(admin, scope).resolve).to eq(scope)
+    end
   end
 
-  permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
+  permissions :show?, :index? do
+    it 'permite a cualquier usuario ver una residencia' do
+      expect(subject).to permit(admin, residential)
+      expect(subject).to permit(user, residential)
+      expect(subject).to permit(another_user, residential)
+    end
   end
 
-  permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+  permissions :create?, :update?, :destroy? do
+    it 'permite a un administrador crear, actualizar o eliminar una residencia' do
+      expect(subject).to permit(admin, residential)
+    end
 
-  permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+    it 'permite al usuario propietario crear, actualizar o eliminar su propia residencia' do
+      expect(subject).to permit(user, residential)
+    end
 
-  permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it 'no permite a un usuario diferente crear, actualizar o eliminar una residencia ajena' do
+      expect(subject).not_to permit(another_user, residential)
+    end
   end
 end
