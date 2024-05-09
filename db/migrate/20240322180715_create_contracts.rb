@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+# Description: CreateContracts migration that creates a table with a client, land, contract_date, type, down_payment,
+# monthly_payment, yearly_payment, months, penalty_interest, and extraordinary_payment columns.
 class CreateContracts < ActiveRecord::Migration[7.0]
-  def change
+  def change # rubocop:disable Metrics/MethodLength
     create_table :contracts do |t|
       t.references :client, null: false, foreign_key: true
       t.references :land, null: false, foreign_key: true

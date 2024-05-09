@@ -21,4 +21,3 @@ class ResidentialSerializer < ActiveModel::Serializer
   has_many :lands, if: -> { @instance_options[:include_lands] }
   has_many :expenses, if: -> { @instance_options[:include_expenses] }
 end
-

@@ -1,7 +1,7 @@
 test:
   adapter: postgresql
   encoding: unicode
-  database: app_test
+  database: ramas_test
   pool: 5
   username: circleci
   password: ""

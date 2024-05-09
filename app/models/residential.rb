@@ -4,8 +4,8 @@
 class Residential < ApplicationRecord
   belongs_to :user
 
-  has_many :lands
-  has_many :expenses
+  has_many :lands, dependent: :nullify
+  has_many :expenses, dependent: :nullify
   has_many :payments, through: :lands
   has_many :clients, through: :lands
   has_many :contracts, through: :lands

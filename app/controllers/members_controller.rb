@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# Handles the members of the application
 class MembersController < ApplicationController
   before_action :authorized
 
@@ -8,6 +10,7 @@ class MembersController < ApplicationController
   end
 
   def show
-    render json: current_user, serializer: UserSerializer, adapter: :json_api, meta: { token: decoded_token }, status: :created
+    render json: current_user, serializer: UserSerializer, adapter: :json_api, meta: { token: decoded_token },
+           status: :created
   end
 end

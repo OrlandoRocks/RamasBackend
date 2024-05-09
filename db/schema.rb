@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "clients", force: :cascade do |t|
     t.string "code"
     t.string "full_name"
@@ -44,8 +47,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   end
 
   create_table "contracts", force: :cascade do |t|
-    t.integer "client_id", null: false
-    t.integer "land_id", null: false
+    t.bigint "client_id", null: false
+    t.bigint "land_id", null: false
     t.date "contract_date"
     t.string "type"
     t.decimal "down_payment"
@@ -61,8 +64,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   end
 
   create_table "expenses", force: :cascade do |t|
-    t.integer "residential_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "residential_id", null: false
+    t.bigint "user_id", null: false
     t.string "account"
     t.string "department"
     t.string "type"
@@ -83,7 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   end
 
   create_table "lands", force: :cascade do |t|
-    t.integer "residential_id", null: false
+    t.bigint "residential_id", null: false
     t.string "type"
     t.string "address"
     t.string "block"
@@ -96,7 +99,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   end
 
   create_table "payments", force: :cascade do |t|
-    t.integer "land_id", null: false
+    t.bigint "land_id", null: false
     t.decimal "amount"
     t.date "payment_date"
     t.string "payment_type"
@@ -112,7 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
     t.string "name"
     t.string "address"
     t.decimal "cost"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_residentials_on_user_id"
@@ -131,7 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role_id", default: 1, null: false
+    t.bigint "role_id", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
   end

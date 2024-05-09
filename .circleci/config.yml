@@ -1,54 +1,53 @@
 version: 2.1
 
-jobs:
-  test:
+orbs:
+  ruby: circleci/ruby@1.8.0
+
+executors:
+  ruby:
     docker:
-      - image: circleci/ruby:3.1.7
+      - image: cimg/ruby:3.2.2
+  rails:
+    docker:
+      - image: cimg/ruby:3.2.2
         environment:
-          BUNDLE_JOBS: 4
-          BUNDLE_RETRY: 3
           PGHOST: 127.0.0.1
-          PGUSER: circleci
-          PGPASSWORD: ""
-
-      - image: circleci/postgres:12-alpine
+          PGUSER: postgres
+          RAILS_ENV: test
+      - image: cimg/postgres:14.2
         environment:
-          POSTGRES_USER: circleci
-          POSTGRES_DB: app_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_USER: postgres
+          POSTGRES_DB: ramas_test
+          POSTGRES_PASSWORD: postgres
 
+jobs:
+  linter:
+    executor: ruby
     steps:
       - checkout
-
-      # Cache gems based on Gemfile.lock
-      - restore_cache:
-          keys:
-            - v1-gems-{{ checksum "Gemfile.lock" }}
-            - v1-gems-
-
+      - ruby/install-deps:
+          key: gems-v2
+  tests:
+    executor: rails
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1
+    steps:
+      - checkout
+      - ruby/install-deps:
+          key: gems-v2
       - run:
-          name: Install Dependencies
-          command: bundle install --jobs=4 --retry=3 --path=vendor/bundle
-
-      - save_cache:
-          paths:
-            - vendor/bundle
-          key: v1-gems-{{ checksum "Gemfile.lock" }}
-
-      # Database setup
+          command: 'dockerize -wait tcp://localhost:5432 -timeout 1m'
+          name: Wait for Postgres
       - run:
-          name: Prepare Database
-          command: |
-            cp config/database.yml.ci config/database.yml
-            bundle exec rake db:create db:schema:load
-
-      # Run tests
-      - run:
-          name: Run Tests
-          command: bundle exec rspec
+          command: 'bundle exec rails db:schema:load --trace'
+          name: Database setup
+      - ruby/rspec-test
 
 workflows:
-  version: 2
-  test:
+  version: 2.1
+  linter-and-tests:
     jobs:
-      - test
+      - linter
+      - tests

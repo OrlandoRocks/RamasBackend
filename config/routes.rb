@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   post '/login', to: 'auth#login'
   post '/logout', to: 'auth#logout'

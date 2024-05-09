@@ -1,0 +1,72 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    environment:
+      DATABASE_HOST: localhost
+      POSTGRES_DB: ramas_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  test_db:
+    image: postgres:14
+    environment:
+      DATABASE_HOST: db
+      POSTGRES_DB: ramas_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+
+  prod_db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ramas_prod
+      POSTGRES_USER: ramas_postgres
+      POSTGRES_PASSWORD: rbr123qwe
+    ports:
+      - "5434:5432"
+    volumes:
+      - prod_postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    volumes:
+      - .:/RamasBackend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  test_web:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rspec"
+    volumes:
+      - .:/RamasBackend
+    depends_on:
+      - test_db
+
+  prod_web:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0' -e production"
+    volumes:
+      - .:/RamasBackend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prod_db
+
+volumes:
+  postgres_data:
+  test_postgres_data:
+  prod_postgres_data:
