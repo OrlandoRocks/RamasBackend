@@ -58,3 +58,7 @@ docker-compose exec web rails db:migrate
 docker-compose up -d   ## Iniciar los contenedores en segundo plano
 docker-compose down    ## Detener los contenedores
 docker-compose exec web bash   ## Acceder a una consola Bash dentro del contenedor web
+
+# postgres
+brew services start postgresql
+brew services stop postgresql

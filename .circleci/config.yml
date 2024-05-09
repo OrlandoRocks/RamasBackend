@@ -38,6 +38,12 @@ jobs:
       - ruby/install-deps:
           key: gems-v2
       - run:
+          name: Load Environment Variables
+          command: |
+            if [ -f .env.test ]; then
+              export $(grep -v '^#' .env.test | xargs);
+            fi
+      - run:
           command: 'dockerize -wait tcp://localhost:5432 -timeout 1m'
           name: Wait for Postgres
       - run:
