@@ -6,6 +6,8 @@ class User < ApplicationRecord
   has_many :expenses, dependent: :nullify
 
   has_secure_password
+  validates :email, presence: true, uniqueness: true
+
 
   def admin?
     role.name == "admin"

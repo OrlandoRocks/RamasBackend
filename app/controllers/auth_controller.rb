@@ -5,7 +5,6 @@ class AuthController < ApplicationController
   skip_before_action :authorized, only: [:login]
 
   def login
-    Rails.logger.debug { "login_params: #{login_params}" }
     @user = User.find_by(email: login_params[:email])
     if @user&.authenticate(login_params[:password])
       @token = encode_token({ user_id: @user.id })

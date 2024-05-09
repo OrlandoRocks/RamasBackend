@@ -29,6 +29,8 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
+    return @user if @user
+
     return nil unless decoded_token
 
     user_id = decoded_token["user_id"]

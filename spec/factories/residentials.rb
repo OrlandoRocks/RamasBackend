@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :residential do
-    name { "MyString" }
-    address { "MyString" }
-    user { nil }
+    name { Faker::Address.community }
+    address { Faker::Address.full_address }
+    association :user, factory: :user
   end
 end

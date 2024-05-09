@@ -3,7 +3,7 @@ services:
   db:
     image: postgres:14
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: localhost
       POSTGRES_DB: ramas_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

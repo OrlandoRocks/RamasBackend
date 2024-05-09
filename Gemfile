@@ -55,6 +55,7 @@ group :development, :test do
 
   gem "dotenv-rails"
   gem "factory_bot_rails", "~> 6.2"
+  gem 'faker'
   gem "pry-byebug"
   gem "rails-controller-testing"
   gem "rspec_junit_formatter"

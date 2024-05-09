@@ -4,6 +4,20 @@
 *.dump
 !/spec/fixtures/**/*.dump
 
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+log/*.log
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
 .yardoc/
 pkg/
 tmp/
@@ -14,3 +28,4 @@ spec/reports/
 
 # rspec failure tracking
 .rspec_status
+.byebug_history
