@@ -18,7 +18,7 @@ RSpec.describe ResidentialPolicy do
     end
   end
 
-  permissions :show?, :index? do
+  describe 'Permisos para show e index' do
     it 'permite a cualquier usuario ver una residencia' do
       expect(subject).to permit(admin, residential)
       expect(subject).to permit(user, residential)
@@ -26,7 +26,7 @@ RSpec.describe ResidentialPolicy do
     end
   end
 
-  permissions :create?, :update?, :destroy? do
+  describe 'Permisos para create, update y destroy' do
     it 'permite a un administrador crear, actualizar o eliminar una residencia' do
       expect(subject).to permit(admin, residential)
     end
