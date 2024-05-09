@@ -105,3 +105,107 @@ Processing by Users::RegistrationsController#create as HTML
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
 Completed 422 Unprocessable Entity in 5ms (Views: 0.4ms | ActiveRecord: 0.6ms | Allocations: 2231)
   [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mrollback transaction[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[35m (97.4ms)[0m  [1m[35mDROP DATABASE IF EXISTS "ramas_test"[0m
+  [1m[35m (1316.6ms)[0m  [1m[35mCREATE DATABASE "ramas_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (1.1ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (2.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "clients" CASCADE[0m
+  [1m[35m (26.7ms)[0m  [1m[35mCREATE TABLE "clients" ("id" bigserial primary key, "code" character varying, "full_name" character varying, "identification_card" character varying, "rfc" character varying, "address" character varying, "colony" character varying, "zip_code" character varying, "phone_number" character varying, "city" character varying, "state" character varying, "country" character varying, "assignee" character varying, "email" character varying, "birthday" date, "nationality" character varying, "civil_status" character varying, "spouse" character varying, "economic_dependants" boolean, "home_owner" boolean, "occupation" character varying, "company" character varying, "company_address" character varying, "company_phone" character varying, "monthly_income" decimal, "monthly_expenses" decimal, "comments" text, "image" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE IF EXISTS "contracts" CASCADE[0m
+  [1m[35m (20.1ms)[0m  [1m[35mCREATE TABLE "contracts" ("id" bigserial primary key, "client_id" bigint NOT NULL, "land_id" bigint NOT NULL, "contract_date" date, "type" character varying, "down_payment" decimal, "monthly_payment" decimal, "yearly_payment" decimal, "months" float, "penalty_interest" decimal, "extraordinary_payment" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE INDEX "index_contracts_on_client_id" ON "contracts" ("client_id")[0m
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE INDEX "index_contracts_on_land_id" ON "contracts" ("land_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE IF EXISTS "expenses" CASCADE[0m
+  [1m[35m (12.7ms)[0m  [1m[35mCREATE TABLE "expenses" ("id" bigserial primary key, "residential_id" bigint NOT NULL, "user_id" bigint NOT NULL, "account" character varying, "department" character varying, "type" character varying, "comments" character varying, "amount" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (5.7ms)[0m  [1m[35mCREATE INDEX "index_expenses_on_residential_id" ON "expenses" ("residential_id")[0m
+  [1m[35m (7.9ms)[0m  [1m[35mCREATE INDEX "index_expenses_on_user_id" ON "expenses" ("user_id")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mDROP TABLE IF EXISTS "jwt_denylist" CASCADE[0m
+  [1m[35m (14.5ms)[0m  [1m[35mCREATE TABLE "jwt_denylist" ("id" bigserial primary key, "jti" character varying NOT NULL, "exp" timestamp(6) NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (7.0ms)[0m  [1m[35mCREATE INDEX "index_jwt_denylist_on_jti" ON "jwt_denylist" ("jti")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE IF EXISTS "lands" CASCADE[0m
+  [1m[35m (13.7ms)[0m  [1m[35mCREATE TABLE "lands" ("id" bigserial primary key, "residential_id" bigint NOT NULL, "type" character varying, "address" character varying, "block" character varying, "size" float, "price" decimal, "house_number" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (8.7ms)[0m  [1m[35mCREATE INDEX "index_lands_on_residential_id" ON "lands" ("residential_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE IF EXISTS "payments" CASCADE[0m
+  [1m[35m (26.3ms)[0m  [1m[35mCREATE TABLE "payments" ("id" bigserial primary key, "land_id" bigint NOT NULL, "amount" decimal, "payment_date" date, "payment_type" character varying, "comments" text, "image_url" character varying, "status" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (7.4ms)[0m  [1m[35mCREATE INDEX "index_payments_on_land_id" ON "payments" ("land_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE IF EXISTS "residentials" CASCADE[0m
+  [1m[35m (17.3ms)[0m  [1m[35mCREATE TABLE "residentials" ("id" bigserial primary key, "name" character varying, "address" character varying, "cost" decimal, "user_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (6.3ms)[0m  [1m[35mCREATE INDEX "index_residentials_on_user_id" ON "residentials" ("user_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mDROP TABLE IF EXISTS "roles" CASCADE[0m
+  [1m[35m (15.1ms)[0m  [1m[35mCREATE TABLE "roles" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (15.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "email" character varying DEFAULT '' NOT NULL, "password_digest" character varying DEFAULT '' NOT NULL, "name" character varying, "last_name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, "role_id" bigint NOT NULL)[0m
+  [1m[35m (5.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (6.9ms)[0m  [1m[35mCREATE INDEX "index_users_on_role_id" ON "users" ("role_id")[0m
+  [1m[35m (8.7ms)[0m  [1m[35mALTER TABLE "contracts" ADD CONSTRAINT "fk_rails_0d81c04110"
+FOREIGN KEY ("client_id")
+  REFERENCES "clients" ("id")
+[0m
+  [1m[35m (2.9ms)[0m  [1m[35mALTER TABLE "contracts" ADD CONSTRAINT "fk_rails_8e3cd3d1db"
+FOREIGN KEY ("land_id")
+  REFERENCES "lands" ("id")
+[0m
+  [1m[35m (4.7ms)[0m  [1m[35mALTER TABLE "expenses" ADD CONSTRAINT "fk_rails_cb94e502f7"
+FOREIGN KEY ("residential_id")
+  REFERENCES "residentials" ("id")
+[0m
+  [1m[35m (3.2ms)[0m  [1m[35mALTER TABLE "expenses" ADD CONSTRAINT "fk_rails_c3ee69df61"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (3.6ms)[0m  [1m[35mALTER TABLE "lands" ADD CONSTRAINT "fk_rails_92a5ccf72e"
+FOREIGN KEY ("residential_id")
+  REFERENCES "residentials" ("id")
+[0m
+  [1m[35m (2.9ms)[0m  [1m[35mALTER TABLE "payments" ADD CONSTRAINT "fk_rails_3e9a0532ce"
+FOREIGN KEY ("land_id")
+  REFERENCES "lands" ("id")
+[0m
+  [1m[35m (2.6ms)[0m  [1m[35mALTER TABLE "residentials" ADD CONSTRAINT "fk_rails_3aaf34dff8"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (7.5ms)[0m  [1m[35mALTER TABLE "users" ADD CONSTRAINT "fk_rails_642f17018b"
+FOREIGN KEY ("role_id")
+  REFERENCES "roles" ("id")
+[0m
+  [1m[35m (32.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (3.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20240411190814)[0m
+  [1m[35m (5.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20231030193922),
+(20240227191806),
+(20240322172937),
+(20240322174350),
+(20240322175614),
+(20240322180715),
+(20240322181623),
+(20240322183243),
+(20240411190711);
+
+[0m
+  [1m[35m (16.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.5ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (3.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-05-08 22:45:49.068113"], ["updated_at", "2024-05-08 22:45:49.068113"]]
+  [1m[36mTRANSACTION (36.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.8ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (1.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "80c1700cb0fe3c3c50c5c61ee69316e2dffbb65b"], ["created_at", "2024-05-08 22:45:49.170451"], ["updated_at", "2024-05-08 22:45:49.170451"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (3.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (3.6ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (3.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (1.9ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (5.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (5.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (3.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

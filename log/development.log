@@ -28822,3 +28822,505 @@ Processing by ClientsController#index as HTML
 Completed 200 OK in 26ms (Views: 14.8ms | ActiveRecord: 1.2ms | Allocations: 4400)
 
 
+[dotenv] Set [36mPORT[0m, [36mRAILS_ENV[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[35m (3.3ms)[0m  [1m[35mCREATE DATABASE "ramas_dev" ENCODING = 'unicode'[0m
+  [1m[35m (195.0ms)[0m  [1m[35mCREATE DATABASE "ramas_test" ENCODING = 'unicode'[0m
+  [1m[35m (19.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (6.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateJwtDenylist (20231030193922)
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.2ms)[0m  [1m[35mCREATE TABLE "jwt_denylist" ("id" bigserial primary key, "jti" character varying NOT NULL, "exp" timestamp(6) NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE INDEX "index_jwt_denylist_on_jti" ON "jwt_denylist" ("jti")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20231030193922"]]
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateUser (20240227191806)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.9ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "email" character varying DEFAULT '' NOT NULL, "password_digest" character varying DEFAULT '' NOT NULL, "name" character varying, "last_name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (3.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240227191806"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateResidentials (20240322172937)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.9ms)[0m  [1m[35mCREATE TABLE "residentials" ("id" bigserial primary key, "name" character varying, "address" character varying, "cost" decimal, "user_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_3aaf34dff8"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (2.9ms)[0m  [1m[35mCREATE INDEX "index_residentials_on_user_id" ON "residentials" ("user_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322172937"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateClients (20240322174350)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.3ms)[0m  [1m[35mCREATE TABLE "clients" ("id" bigserial primary key, "code" character varying, "full_name" character varying, "identification_card" character varying, "rfc" character varying, "address" character varying, "colony" character varying, "zip_code" character varying, "phone_number" character varying, "city" character varying, "state" character varying, "country" character varying, "assignee" character varying, "email" character varying, "birthday" date, "nationality" character varying, "civil_status" character varying, "spouse" character varying, "economic_dependants" boolean, "home_owner" boolean, "occupation" character varying, "company" character varying, "company_address" character varying, "company_phone" character varying, "monthly_income" decimal, "monthly_expenses" decimal, "comments" text, "image" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322174350"]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateLands (20240322175614)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "lands" ("id" bigserial primary key, "residential_id" bigint NOT NULL, "type" character varying, "address" character varying, "block" character varying, "size" float, "price" decimal, "house_number" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_92a5ccf72e"
+FOREIGN KEY ("residential_id")
+  REFERENCES "residentials" ("id")
+)[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE INDEX "index_lands_on_residential_id" ON "lands" ("residential_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322175614"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateContracts (20240322180715)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.6ms)[0m  [1m[35mCREATE TABLE "contracts" ("id" bigserial primary key, "client_id" bigint NOT NULL, "land_id" bigint NOT NULL, "contract_date" date, "type" character varying, "down_payment" decimal, "monthly_payment" decimal, "yearly_payment" decimal, "months" float, "penalty_interest" decimal, "extraordinary_payment" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0d81c04110"
+FOREIGN KEY ("client_id")
+  REFERENCES "clients" ("id")
+, CONSTRAINT "fk_rails_8e3cd3d1db"
+FOREIGN KEY ("land_id")
+  REFERENCES "lands" ("id")
+)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE INDEX "index_contracts_on_client_id" ON "contracts" ("client_id")[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE INDEX "index_contracts_on_land_id" ON "contracts" ("land_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322180715"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreatePayments (20240322181623)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.7ms)[0m  [1m[35mCREATE TABLE "payments" ("id" bigserial primary key, "land_id" bigint NOT NULL, "amount" decimal, "payment_date" date, "payment_type" character varying, "comments" text, "image_url" character varying, "status" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_3e9a0532ce"
+FOREIGN KEY ("land_id")
+  REFERENCES "lands" ("id")
+)[0m
+  [1m[35m (4.2ms)[0m  [1m[35mCREATE INDEX "index_payments_on_land_id" ON "payments" ("land_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322181623"]]
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateExpenses (20240322183243)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.4ms)[0m  [1m[35mCREATE TABLE "expenses" ("id" bigserial primary key, "residential_id" bigint NOT NULL, "user_id" bigint NOT NULL, "account" character varying, "department" character varying, "type" character varying, "comments" character varying, "amount" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_cb94e502f7"
+FOREIGN KEY ("residential_id")
+  REFERENCES "residentials" ("id")
+, CONSTRAINT "fk_rails_c3ee69df61"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE INDEX "index_expenses_on_residential_id" ON "expenses" ("residential_id")[0m
+  [1m[35m (3.2ms)[0m  [1m[35mCREATE INDEX "index_expenses_on_user_id" ON "expenses" ("user_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240322183243"]]
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateRoles (20240411190711)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.8ms)[0m  [1m[35mCREATE TABLE "roles" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240411190711"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddRoleToUsers (20240411190814)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "users" ADD "role_id" bigint NOT NULL[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE INDEX "index_users_on_role_id" ON "users" ("role_id")[0m
+  [1m[35m (4.7ms)[0m  [1m[35mALTER TABLE "users" ADD CONSTRAINT "fk_rails_642f17018b"
+FOREIGN KEY ("role_id")
+  REFERENCES "roles" ("id")
+[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240411190814"]]
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (2.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2024-05-08 22:39:06.846113"], ["updated_at", "2024-05-08 22:39:06.846113"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT pg_advisory_unlock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (0.6ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "admin"], ["created_at", "2024-05-08 22:39:07.155865"], ["updated_at", "2024-05-08 22:39:07.155865"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (0.4ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "client"], ["created_at", "2024-05-08 22:39:07.161403"], ["updated_at", "2024-05-08 22:39:07.161403"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (0.8ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "user"], ["created_at", "2024-05-08 22:39:07.168460"], ["updated_at", "2024-05-08 22:39:07.168460"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Create (2.9ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "name", "last_name", "created_at", "updated_at", "role_id") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "admin@user.com"], ["password_digest", "[FILTERED]"], ["name", "Admin"], ["last_name", "User"], ["created_at", "2024-05-08 22:39:07.489295"], ["updated_at", "2024-05-08 22:39:07.489295"], ["role_id", 1]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+[dotenv] Set [36mPORT[0m, [36mRAILS_ENV[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE DATABASE "ramas_dev" ENCODING = 'unicode'[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE DATABASE "ramas_test" ENCODING = 'unicode'[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT pg_advisory_unlock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/" for 192.168.65.1 at 2024-05-08 22:45:35 +0000
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 50.7ms | Allocations: 635)
+Completed 200 OK in 553ms (Views: 198.1ms | ActiveRecord: 0.0ms | Allocations: 6032)
+
+
+Started GET "/" for 192.168.65.1 at 2024-05-08 23:43:07 +0000
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 36.4ms | Allocations: 272)
+Completed 200 OK in 161ms (Views: 124.6ms | ActiveRecord: 0.0ms | Allocations: 873)
+
+
+Started POST "/login" for 192.168.65.1 at 2024-05-08 23:43:36 +0000
+Processing by AuthController#login as HTML
+  Parameters: {"auth"=>{"email"=>"admin@admin.com", "password"=>"[FILTERED]"}}
+login_params: {"email"=>"admin@admin.com", "password"=>"qwe123"}
+  [1m[36mUser Load (11.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "admin@admin.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:9:in `login'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (2.8ms)
+Completed 401 Unauthorized in 516ms (Views: 16.7ms | ActiveRecord: 59.2ms | Allocations: 9566)
+
+
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mRAILS_ENV[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[35m (9.2ms)[0m  [1m[35mCREATE DATABASE "ramas_dev" ENCODING = 'unicode'[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE DATABASE "ramas_test" ENCODING = 'unicode'[0m
+[dotenv] Set [36mPORT[0m, [36mRAILS_ENV[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[35m (5.8ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (14.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (11.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT pg_advisory_unlock(7130632311790648710)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mPORT[0m, [36mRAILS_ENV[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (29.6ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "admin"], ["created_at", "2024-05-09 01:13:46.151027"], ["updated_at", "2024-05-09 01:13:46.151027"]]
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (0.6ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "client"], ["created_at", "2024-05-09 01:13:46.191426"], ["updated_at", "2024-05-09 01:13:46.191426"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mRole Create (0.7ms)[0m  [1m[32mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "user"], ["created_at", "2024-05-09 01:13:46.198877"], ["updated_at", "2024-05-09 01:13:46.198877"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Create (15.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "name", "last_name", "created_at", "updated_at", "role_id") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "admin@user.com"], ["password_digest", "[FILTERED]"], ["name", "Admin"], ["last_name", "User"], ["created_at", "2024-05-09 01:13:46.678061"], ["updated_at", "2024-05-09 01:13:46.678061"], ["role_id", 4]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mPORT[0m, [36mWEB_CONCURRENCY[0m, [36mRAILS_MAX_THREADS[0m, [36mSECRET_KEY_BASE[0m, [36mBASE_ROUTE[0m, [36mAWS_REGION[0m, [36mAWS_ACCESS_KEY_ID[0m, [36mAWS_SECRET_ACCESS_KEY[0m, and [36mS3_BUCKET_NAME[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mUser Load (2.7ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  [1m[36mRole Load (0.7ms)[0m  [1m[34mSELECT "roles".* FROM "roles"[0m
+Started GET "/" for 192.168.65.1 at 2024-05-09 01:32:26 +0000
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-7.0.8.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 5.1ms | Allocations: 490)
+Completed 200 OK in 43ms (Views: 12.0ms | ActiveRecord: 0.0ms | Allocations: 4211)
+
+
+Started POST "/login" for 192.168.65.1 at 2024-05-09 01:33:19 +0000
+Processing by AuthController#login as HTML
+  Parameters: {"auth"=>{"email"=>"admin@admin.com", "password"=>"[FILTERED]"}}
+login_params: {"email"=>"admin@admin.com", "password"=>"password"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "admin@admin.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:9:in `login'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (0.14ms)
+Completed 401 Unauthorized in 25ms (Views: 3.7ms | ActiveRecord: 2.2ms | Allocations: 5437)
+
+
+Started POST "/login" for 192.168.65.1 at 2024-05-09 01:33:37 +0000
+Processing by AuthController#login as HTML
+  Parameters: {"auth"=>{"email"=>"admin@user.com", "password"=>"[FILTERED]"}}
+login_params: {"email"=>"admin@user.com", "password"=>"password"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "admin@user.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:9:in `login'
+[active_model_serializers] Rendered UserSerializer with ActiveModelSerializers::Adapter::JsonApi (13.73ms)
+Completed 202 Accepted in 246ms (Views: 21.5ms | ActiveRecord: 3.0ms | Allocations: 8112)
+
+
+Started GET "/residentials" for 192.168.65.1 at 2024-05-09 01:33:47 +0000
+Processing by ResidentialsController#index as HTML
+  [1m[36mJwtDenylist Exists? (2.6ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mResidential Load (4.3ms)[0m  [1m[34mSELECT "residentials".* FROM "residentials"[0m
+  ↳ app/controllers/residentials_controller.rb:12:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (0.18ms)
+Completed 200 OK in 54ms (Views: 10.3ms | ActiveRecord: 9.1ms | Allocations: 9940)
+
+
+Started GET "/users" for 192.168.65.1 at 2024-05-09 01:33:48 +0000
+Processing by MembersController#index as HTML
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/members_controller.rb:9:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::JsonApi (1.17ms)
+Completed 200 OK in 18ms (Views: 9.8ms | ActiveRecord: 1.3ms | Allocations: 4400)
+
+
+Started POST "/residentials" for 192.168.65.1 at 2024-05-09 01:34:22 +0000
+Processing by ResidentialsController#create as HTML
+  Parameters: {"residential"=>{"name"=>"Fracc Test", "address"=>"Address Fracc Test", "cost"=>"1233312.00", "user_id"=>"1"}}
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/residentials_controller.rb:27:in `create'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/residentials_controller.rb:27:in `create'
+  [1m[36mResidential Create (11.1ms)[0m  [1m[32mINSERT INTO "residentials" ("name", "address", "cost", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Fracc Test"], ["address", "Address Fracc Test"], ["cost", "1233312.0"], ["user_id", 1], ["created_at", "2024-05-09 01:34:22.592437"], ["updated_at", "2024-05-09 01:34:22.592437"]]
+  ↳ app/controllers/residentials_controller.rb:27:in `create'
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/residentials_controller.rb:27:in `create'
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+[active_model_serializers]   [1m[36mLand Count (3.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:12:in `lands_count'
+[active_model_serializers]   [1m[36mExpense Exists? (2.8ms)[0m  [1m[34mSELECT 1 AS one FROM "expenses" WHERE "expenses"."residential_id" = $1 LIMIT $2[0m  [["residential_id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:16:in `total_expenses'
+[active_model_serializers] Rendered ResidentialSerializer with ActiveModelSerializers::Adapter::Attributes (35.78ms)
+Completed 201 Created in 127ms (Views: 32.4ms | ActiveRecord: 28.0ms | Allocations: 20434)
+
+
+Started GET "/residentials" for 192.168.65.1 at 2024-05-09 01:34:22 +0000
+Processing by ResidentialsController#index as HTML
+  [1m[36mJwtDenylist Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mResidential Load (0.6ms)[0m  [1m[34mSELECT "residentials".* FROM "residentials"[0m
+  ↳ app/controllers/residentials_controller.rb:12:in `index'
+[active_model_serializers]   [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:8:in `user_full_name'
+[active_model_serializers]   [1m[36mLand Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:12:in `lands_count'
+[active_model_serializers]   [1m[36mExpense Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "expenses" WHERE "expenses"."residential_id" = $1 LIMIT $2[0m  [["residential_id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:16:in `total_expenses'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (6.91ms)
+Completed 200 OK in 32ms (Views: 14.9ms | ActiveRecord: 2.7ms | Allocations: 7791)
+
+
+Started GET "/residentials/1" for 192.168.65.1 at 2024-05-09 01:34:26 +0000
+Started GET "/users" for 192.168.65.1 at 2024-05-09 01:34:26 +0000
+Processing by ResidentialsController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mJwtDenylist Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mResidential Load (0.8ms)[0m  [1m[34mSELECT "residentials".* FROM "residentials" WHERE "residentials"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/residentials_controller.rb:56:in `set_residential'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+Processing by MembersController#index as HTML
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+[active_model_serializers]   [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:8:in `user_full_name'
+[active_model_serializers]   [1m[36mLand Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:12:in `lands_count'
+[active_model_serializers]   [1m[36mExpense Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "expenses" WHERE "expenses"."residential_id" = $1 LIMIT $2[0m  [["residential_id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:16:in `total_expenses'
+[active_model_serializers]   [1m[36mLand Load (0.3ms)[0m  [1m[34mSELECT "lands".* FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/controllers/residentials_controller.rb:18:in `show'
+[active_model_serializers]   [1m[36mExpense Load (0.4ms)[0m  [1m[34mSELECT "expenses".* FROM "expenses" WHERE "expenses"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/controllers/residentials_controller.rb:18:in `show'
+[active_model_serializers] Rendered ResidentialSerializer with ActiveModelSerializers::Adapter::Attributes (17.83ms)
+Completed 200 OK in 63ms (Views: 28.6ms | ActiveRecord: 3.9ms | Allocations: 10236)
+
+
+  [1m[36mJwtDenylist Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/members_controller.rb:9:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::JsonApi (1.34ms)
+Completed 200 OK in 57ms (Views: 11.3ms | ActiveRecord: 12.0ms | Allocations: 12847)
+
+
+Started PUT "/residentials/1" for 192.168.65.1 at 2024-05-09 01:34:31 +0000
+Processing by ResidentialsController#update as HTML
+  Parameters: {"residential"=>{"name"=>"Fracc Test", "address"=>"Address Fracc ", "cost"=>"1233312.0", "user_id"=>"1", "id"=>1}, "id"=>"1"}
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mResidential Load (0.4ms)[0m  [1m[34mSELECT "residentials".* FROM "residentials" WHERE "residentials"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/residentials_controller.rb:56:in `set_residential'
+[31mUnpermitted parameter: :id. Context: { controller: ResidentialsController, action: update, request: #<ActionDispatch::Request:0x00007fb18675bd60>, params: {"residential"=>{"name"=>"Fracc Test", "address"=>"Address Fracc ", "cost"=>"1233312.0", "user_id"=>"1", "id"=>1}, "controller"=>"residentials", "action"=>"update", "id"=>"1"} }[0m
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/residentials_controller.rb:37:in `update'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/residentials_controller.rb:37:in `update'
+  [1m[36mResidential Update (1.3ms)[0m  [1m[33mUPDATE "residentials" SET "address" = $1, "updated_at" = $2 WHERE "residentials"."id" = $3[0m  [["address", "Address Fracc "], ["updated_at", "2024-05-09 01:34:31.958676"], ["id", 1]]
+  ↳ app/controllers/residentials_controller.rb:37:in `update'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/residentials_controller.rb:37:in `update'
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+[active_model_serializers]   [1m[36mLand Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:12:in `lands_count'
+[active_model_serializers]   [1m[36mExpense Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "expenses" WHERE "expenses"."residential_id" = $1 LIMIT $2[0m  [["residential_id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:16:in `total_expenses'
+[active_model_serializers] Rendered ResidentialSerializer with ActiveModelSerializers::Adapter::Attributes (7.43ms)
+Completed 200 OK in 37ms (Views: 13.1ms | ActiveRecord: 6.0ms | Allocations: 8555)
+
+
+Started GET "/residentials" for 192.168.65.1 at 2024-05-09 01:34:32 +0000
+Processing by ResidentialsController#index as HTML
+  [1m[36mJwtDenylist Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mResidential Load (0.4ms)[0m  [1m[34mSELECT "residentials".* FROM "residentials"[0m
+  ↳ app/controllers/residentials_controller.rb:12:in `index'
+[active_model_serializers]   [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:8:in `user_full_name'
+[active_model_serializers]   [1m[36mLand Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "lands" WHERE "lands"."residential_id" = $1[0m  [["residential_id", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:12:in `lands_count'
+[active_model_serializers]   [1m[36mExpense Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "expenses" WHERE "expenses"."residential_id" = $1 LIMIT $2[0m  [["residential_id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/residential_serializer.rb:16:in `total_expenses'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (8.05ms)
+Completed 200 OK in 32ms (Views: 15.0ms | ActiveRecord: 2.6ms | Allocations: 7695)
+
+
+Started GET "/clients" for 192.168.65.1 at 2024-05-09 01:34:37 +0000
+Processing by ClientsController#index as HTML
+  [1m[36mJwtDenylist Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mClient Load (1.4ms)[0m  [1m[34mSELECT "clients".* FROM "clients"[0m
+  ↳ app/controllers/clients_controller.rb:11:in `index'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (0.07ms)
+Completed 200 OK in 25ms (Views: 8.3ms | ActiveRecord: 2.2ms | Allocations: 6460)
+
+
+Started POST "/s3_presigned_url" for 192.168.65.1 at 2024-05-09 01:40:51 +0000
+Processing by S3PresignedUrlController#create as HTML
+  Parameters: {"file_name"=>"itachi_deadlift.webp", "s3_presigned_url"=>{"file_name"=>"itachi_deadlift.webp"}}
+  [1m[36mJwtDenylist Exists? (1.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (0.08ms)
+Completed 200 OK in 304ms (Views: 6.5ms | ActiveRecord: 8.6ms | Allocations: 151574)
+
+
+Started POST "/s3_presigned_url" for 192.168.65.1 at 2024-05-09 01:42:40 +0000
+Processing by S3PresignedUrlController#create as HTML
+  Parameters: {"file_name"=>"Zoro_Pizza.png", "s3_presigned_url"=>{"file_name"=>"Zoro_Pizza.png"}}
+  [1m[36mJwtDenylist Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE JwtDenylist Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "jwt_denylist" WHERE "jwt_denylist"."jti" = $1 LIMIT $2[0m  [["jti", "2627908d-f604-4d92-b1a0-235d0c17f916"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:23:in `decoded_token'
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:35:in `current_user'
+[active_model_serializers] Rendered ActiveModel::Serializer::Null with Hash (0.08ms)
+Completed 200 OK in 20ms (Views: 7.1ms | ActiveRecord: 1.1ms | Allocations: 5758)
+
+
