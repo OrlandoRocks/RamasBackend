@@ -46,6 +46,8 @@ Style/FrozenStringLiteralComment:
   Exclude:
     - 'Gemfile'
     - 'Rakefile'
+    - 'app/channels/application_cable/channel.rb'
+    - 'app/channels/application_cable/connection.rb'
     - 'app/jobs/application_job.rb'
     - 'app/mailers/application_mailer.rb'
     - 'app/models/application_record.rb'

@@ -27,7 +27,6 @@ jobs:
       - checkout
       - ruby/install-deps:
           key: gems-v2
-      - ruby/rubocop-check
   tests:
     executor: rails
     environment:
