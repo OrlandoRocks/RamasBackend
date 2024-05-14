@@ -2,7 +2,7 @@
 
 # controller for the application
 class ApplicationController < ActionController::API
-  include Pundit
+  include Pundit::Authorization
   before_action :authorized
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
