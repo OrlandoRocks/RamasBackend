@@ -15,12 +15,12 @@ default: &default
 development:
   <<: *default
   database: ramas_dev
-  host: db
+#  host: db
 
 test:
   <<: *default
   database: ramas_test
-  host: test_db
+#  host: test_db
 
 production:
   <<: *default
