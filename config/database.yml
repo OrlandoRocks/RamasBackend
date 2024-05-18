@@ -15,12 +15,12 @@ default: &default
 development:
   <<: *default
   database: ramas_dev
-#  host: db
+#  host: db # this is the name of the service in the docker-compose file
 
 test:
   <<: *default
   database: ramas_test
-#  host: test_db
+#  host: test_db # this is the name of the service in the docker-compose file
 
 production:
   <<: *default

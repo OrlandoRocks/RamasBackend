@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
@@ -39,7 +37,6 @@ workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 # before forking the application. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
 #
-preload_app!
 
 # rackup DefaultRackup
 # port        ENV.fetch("PORT") { 3000 }
@@ -48,6 +45,7 @@ preload_app!
 # on_worker_boot do
 #   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 # end
+# preload_app!
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
