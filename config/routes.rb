@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/member-data', to: 'members#show'
   get '/users', to: 'members#index'
   get '/contracts/:id/payments', to: 'contracts#payments'
+  get '/residentials-data', to: 'members#residentials'
 
   resources :residentials
   resources :lands
