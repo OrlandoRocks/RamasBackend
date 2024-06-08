@@ -35,7 +35,15 @@ class ResidentialsController < ApplicationController
   # @return [void]
   def update
     if @residential.update(residential_params)
-      render json: @residential, serializer: ResidentialSerializer, status: :ok
+      params[:lands]&.each do |land_params|
+        if land_params[:id].present?
+          land = @residential.lands.find(land_params[:id])
+          land.update(land_params.permit(:name, :size))
+        else
+          @residential.lands.create(land_params.permit(:type, :address, :block, :size, :price, :house_number))
+        end
+      end
+      render json: @residential, serializer: ResidentialSerializer, include_lands: true, status: :ok
     else
       render json: @residential.errors, status: :unprocessable_entity
     end
