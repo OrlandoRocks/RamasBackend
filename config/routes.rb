@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get '/residentials-data', to: 'members#residentials'
 
   resources :residentials
+  resources :lands
   resources :clients
   resources :expenses
   # Define your application router per the DSL in https://guides.rubyonrails.org/routing.html
