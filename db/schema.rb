@@ -50,7 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_02_005105) do
     t.bigint "client_id", null: false
     t.bigint "land_id", null: false
     t.date "contract_date"
-    t.string "type"
+    t.string "contract_type"
     t.decimal "down_payment"
     t.decimal "monthly_payment"
     t.decimal "yearly_payment"
