@@ -18,6 +18,13 @@ class ResidentialSerializer < ActiveModel::Serializer
     object.expenses.sum(:amount)
   end
 
+  def total_payments
+    return 0 if object.payments.empty?
+
+    object.payments.sum(:amount)
+  end
+
   has_many :lands, if: -> { @instance_options[:include_lands] }
   has_many :expenses, if: -> { @instance_options[:include_expenses] }
+  has_many :payments, if: -> { @instance_options[:include_payments] }
 end

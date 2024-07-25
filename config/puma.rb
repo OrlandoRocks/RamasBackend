@@ -45,7 +45,7 @@ workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 # on_worker_boot do
 #   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 # end
-=======
+# =======
 # preload_app!
 
 # Allow puma to be restarted by `bin/rails restart` command.

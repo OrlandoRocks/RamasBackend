@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_30_163738) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_22_193904) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,7 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_163738) do
     t.bigint "client_id", null: false
     t.bigint "land_id", null: false
     t.date "contract_date"
-    t.string "type"
+    t.string "contract_type"
     t.decimal "down_payment"
     t.decimal "monthly_payment"
     t.decimal "yearly_payment"
@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_30_163738) do
 
   create_table "lands", force: :cascade do |t|
     t.bigint "residential_id", null: false
-    t.string "type"
+    t.string "land_code"
     t.string "address"
     t.string "block"
     t.float "size"
