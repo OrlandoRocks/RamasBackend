@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post '/s3_presigned_url', to: 's3_presigned_url#create'
   get '/member-data', to: 'members#show'
   get '/users', to: 'members#index'
+  get '/residentials-data', to: 'members#residentials'
 
   resources :residentials
   resources :lands
