@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'pundit/rspec'
 
 RSpec.describe ExpensePolicy, type: :policy do
   let(:user) { User.new }
