@@ -13,4 +13,6 @@ class MembersController < ApplicationController
     render json: current_user, serializer: UserSerializer, adapter: :json_api, meta: { token: decoded_token },
            status: :created
   end
+
+
 end

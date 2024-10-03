@@ -5,5 +5,7 @@ class Contract < ApplicationRecord
   belongs_to :client
   belongs_to :land
 
-  has_many :users, dependent: :nullify
+  has_many :payments, dependent: :destroy
+
+  accepts_nested_attributes_for :payments
 end
