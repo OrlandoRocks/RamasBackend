@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_02_005105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,7 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
     t.bigint "user_id", null: false
     t.string "account"
     t.string "department"
-    t.string "type"
+    t.string "expense_type"
     t.string "comments"
     t.decimal "amount"
     t.datetime "created_at", null: false
@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
 
   create_table "lands", force: :cascade do |t|
     t.bigint "residential_id", null: false
-    t.string "type"
+    t.string "land_code"
     t.string "address"
     t.string "block"
     t.float "size"
@@ -99,8 +99,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   end
 
   create_table "payments", force: :cascade do |t|
-    t.bigint "land_id", null: false
-    t.decimal "amount"
+    t.decimal "amount", precision: 10, scale: 2
     t.date "payment_date"
     t.string "payment_type"
     t.text "comments"
@@ -108,7 +107,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["land_id"], name: "index_payments_on_land_id"
+    t.bigint "contract_id"
+    t.index ["contract_id"], name: "index_payments_on_contract_id"
   end
 
   create_table "residentials", force: :cascade do |t|
@@ -144,7 +144,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_190814) do
   add_foreign_key "expenses", "residentials"
   add_foreign_key "expenses", "users"
   add_foreign_key "lands", "residentials"
-  add_foreign_key "payments", "lands"
+  add_foreign_key "payments", "contracts"
   add_foreign_key "residentials", "users"
   add_foreign_key "users", "roles"
 end
