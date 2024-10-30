@@ -19,15 +19,21 @@ class ResidentialBalanceSerializer < ActiveModel::Serializer
   end
 
   def total_payments
-    return 0 if object.payments.empty?
+   # return 0 if object.contracts.payments.empty?
 
-    object.payments.sum(:amount)
+    #object.payments.sum(:amount)
   end
 
   def payments_by_month
-    return 0 if object.payments.empty?
+    return 0 if object.contracts.empty?
 
-    object.payments.where(created_at: @instance_options[:serializer_options][:start_date]..@instance_options[:serializer_options][:end_date]).sum(:amount)
+    payments_paid = object.contracts.each_with_object([]) do |contract, sum_payments|
+      sum_payments << contract.payments.where(status: Payment.payment_statuses['Pagado'], 
+                              created_at: @instance_options[:serializer_options][:start_date]..@instance_options[:serializer_options][:end_date]).sum(:amount)
+    end
+
+    payments_paid.sum
+    #object.payments.where(created_at: @instance_options[:serializer_options][:start_date]..@instance_options[:serializer_options][:end_date]).sum(:amount)
   end
 
   def expenses_by_month
