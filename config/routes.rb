@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   get '/users', to: 'members#index'
   get '/contracts/:id/payments', to: 'contracts#payments'
   get '/residentials-data', to: 'members#residentials'
+  get '/balance', to: 'balances#index'
+  get '/get_balance_data', to: 'balances#get_balance_data'
+  get '/residentials-list', to: 'balances#residentials_list'
 
   resources :residentials
   resources :lands
