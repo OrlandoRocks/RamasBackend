@@ -29,9 +29,6 @@ spec/reports/
 # rspec failure tracking
 .rspec_status
 .byebug_history
-<<<<<<< Updated upstream
 /config/credentials/production.key
-=======
 
 .idea/
->>>>>>> Stashed changes
