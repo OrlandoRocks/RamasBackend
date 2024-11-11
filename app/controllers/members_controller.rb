@@ -14,5 +14,8 @@ class MembersController < ApplicationController
            status: :created
   end
 
-
+  def residentials
+    @residentials = Residential.all
+    render json: @residentials, each_serializer: ResidentialSerializer, adapter: :json_api, status: :ok
+  end
 end

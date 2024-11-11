@@ -30,3 +30,5 @@ spec/reports/
 .rspec_status
 .byebug_history
 /config/credentials/production.key
+
+.idea/
