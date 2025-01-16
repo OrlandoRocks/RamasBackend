@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Policy for residential
-class ResidentialPolicy < ApplicationPolicy
-  # Scope class for residential
+# Policy for contract
+class ContractPolicy < ApplicationPolicy
+  # Scope class for contract
   class Scope < Scope
     def resolve
       scope.all

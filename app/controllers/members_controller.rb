@@ -10,7 +10,7 @@ class MembersController < ApplicationController
   end
 
   def show
-    render json: current_user, serializer: UserSerializer, adapter: :json_api, meta: { token: decoded_token },
+    render json: current_user, serializer: UserSerializer, adapter: :json_api, meta: { token: decoded_token, permissions: permissions(@user) },
            status: :created
   end
 

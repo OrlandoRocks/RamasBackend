@@ -10,22 +10,22 @@ class ExpensePolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    user.admin? || user.user?
   end
 
   def index?
-    true
+    user.admin? || user.user?
   end
 
   def create?
-    user.admin? || record.user?
+    user.user?
   end
 
   def update?
-    create?
+    user.admin?
   end
 
   def destroy?
-    create?
+    user.admin?
   end
 end
