@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  POLICY_CLASSES = [ ClientPolicy, ContractPolicy, ExpensePolicy, LandPolicy, PaymentPolicy, ResidentialPolicy ]
+  POLICY_CLASSES = [ ClientPolicy, ContractPolicy, ExpensePolicy, LandPolicy, PaymentPolicy, ResidentialPolicy, UserPolicy ]
 
   def encode_token(payload)
     jti = SecureRandom.uuid

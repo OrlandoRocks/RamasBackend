@@ -5,27 +5,31 @@ class ContractPolicy < ApplicationPolicy
   # Scope class for contract
   class Scope < Scope
     def resolve
-      scope.all
+      if @user.admin?
+        scope.all
+      else
+        scope.where(client_id: @user.id)
+      end
     end
   end
 
   def show?
-    user.admin? || user.user?
+    @user.admin? || @user.user? || @user.client?
   end
 
   def index?
-    user.admin? || user.user?
+    @user.admin? || @user.user? || @user.client?
   end
 
   def create?
-    user.user?
+    @user.user?
   end
 
   def update?
-    user.admin?
+    @user.admin?
   end
 
   def destroy?
-    user.admin?
+    @user.admin?
   end
 end

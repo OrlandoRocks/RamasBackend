@@ -7,7 +7,7 @@ class ContractsController < ApplicationController
   # GET /contracts
   # @return [void]
   def index
-    @contracts = Contract.all
+    @contracts = policy_scope(Contract)
     render json: @contracts, except: [:payments]
   end
 
@@ -55,6 +55,26 @@ class ContractsController < ApplicationController
   def destroy
     @contract.destroy
     render json: { message: "Contract was successfully destroyed." }, status: :ok
+  end
+
+  def user_contracts
+    @contracts = Contract.where(client_id: params[:id])
+    render json: @contracts, each_serializer: ContractSerializer, adapter: :json_api, status: :ok
+  end
+
+  def current_month_payments
+    @payments = Contract.current_month_payments(current_user&.id)
+    render json: @payments
+  end
+
+  def lands_sold
+    @lands = Contract.lands_sold(current_user&.id)
+    render json: @lands
+  end
+
+  def total_paid
+    @total_paid = Contract.total_paid(current_user&.id)
+    render json: @total_paid
   end
 
   private

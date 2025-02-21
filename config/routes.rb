@@ -12,6 +12,12 @@ Rails.application.routes.draw do
   get '/balance', to: 'balances#all_residentials'
   get '/get_balance_data', to: 'balances#get_balance_data'
   get '/residentials-list', to: 'balances#residentials_list'
+  get '/profile/:id', to: 'users#profile'
+  put '/user/:id', to: 'users#update'
+  get '/user_contracts/:id', to: 'contracts#user_contracts'
+  get '/current_month_payments', to: 'contracts#current_month_payments'
+  get '/lands_sold', to: 'contracts#lands_sold'
+  get '/total_paid', to: 'contracts#total_paid'
 
   resources :residentials
   resources :lands
