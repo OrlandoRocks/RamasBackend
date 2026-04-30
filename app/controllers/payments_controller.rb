@@ -27,8 +27,15 @@ class PaymentsController < ApplicationController
   end
 
   def update
+    expected_amount = @payment.amount
+
     if @payment.update(payment_params)
-      update_amount(params[:amount]) if params[:amount]
+      actual_amount = params[:payment][:amount].to_f
+
+      if @payment.status.to_i == Payment.payment_statuses["Pagado"] && actual_amount != expected_amount
+        recalculate_future_payments(expected_amount, actual_amount)
+      end
+
       render json: @payment, status: :ok
     else
       render json: { errors: @payment.errors }, status: :unprocessable_entity
@@ -63,6 +70,48 @@ class PaymentsController < ApplicationController
 
   def set_payment
     @payment = Payment.find(params[:id])
+  end
+
+  def recalculate_future_payments(expected_amount, actual_amount)
+    puts "actual_amount", actual_amount
+    puts "expected_amount", expected_amount
+    difference = (actual_amount - expected_amount).to_d
+
+    puts "difference", difference
+
+    pending_payments = @payment.contract.payments
+                               .where(status: "pending")
+                               .where.not(id: @payment.id)
+                               .order(payment_date: :asc)
+
+    puts "pending_payments", pending_payments.count
+
+    return if pending_payments.empty?
+
+    # adjustment_per_payment = difference / pending_payments.count
+    # puts "adjustment_per_payment", adjustment_per_payment
+
+    total_pending = pending_payments.sum(:amount).to_d
+
+    Payment.transaction do
+      if difference >= total_pending
+        pending_payments.each do |pending_payment|
+          pending_payment.update!(amount: 0, status: Payment.payment_statuses["Cancelado"])
+        end
+      else
+        remaining_balance = total_pending - difference
+        new_monthly_amount = (remaining_balance / pending_payments.count).round(2)
+
+        pending_payments.each_with_index do |pending_payment, index|
+          if index == pending_payments.count - 1
+            last_payment_amount = remaining_balance - (new_monthly_amount * (pending_payments.count - 1))
+            pending_payment.update!(amount: last_payment_amount)
+          else
+            pending_payment.update!(amount: new_monthly_amount)
+          end
+        end
+      end
+    end
   end
 
   def payment_params

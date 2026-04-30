@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   get '/lands_sold', to: 'contracts#lands_sold'
   get '/total_paid', to: 'contracts#total_paid'
 
+  get 'contracts/:id/preview_template', to: 'contracts#preview_template'
+  post 'contracts/:id/generate_custom_pdf', to: 'contracts#generate_custom_pdf'
+  post 'contracts/:id/save_version', to: 'contracts#save_version'
+
   resources :residentials
   resources :lands
   resources :clients

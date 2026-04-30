@@ -32,4 +32,16 @@ class ContractPolicy < ApplicationPolicy
   def destroy?
     @user.admin?
   end
+
+  def preview_template?
+    @user.admin? || @user.user? || @user.client?
+  end
+
+  def generate_custom_pdf?
+    @user.admin? || @user.user? || @user.client?
+  end
+
+  def save_version?
+    @user.admin? || @user.user?
+  end
 end

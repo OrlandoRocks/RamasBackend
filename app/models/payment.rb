@@ -12,7 +12,7 @@ class Payment < ApplicationRecord
     Pendiente: 0,
     Pagado: 1,
     Fallo: 2,
-    Regrezado: 3,
+    Regresado: 3,
     Cancelado: 4
   }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_02_005105) do
+ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_02_005105) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "contract_versions", force: :cascade do |t|
+    t.bigint "contract_id", null: false
+    t.text "html_content"
+    t.integer "version_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_contract_versions_on_contract_id"
   end
 
   create_table "contracts", force: :cascade do |t|
@@ -139,6 +148,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_02_005105) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  add_foreign_key "contract_versions", "contracts"
   add_foreign_key "contracts", "clients"
   add_foreign_key "contracts", "lands"
   add_foreign_key "expenses", "residentials"

@@ -6,6 +6,7 @@ class Contract < ApplicationRecord
   belongs_to :land
 
   has_many :payments, dependent: :destroy
+  has_many :contract_versions, dependent: :destroy
 
   accepts_nested_attributes_for :payments
 
