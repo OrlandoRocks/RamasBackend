@@ -26,4 +26,8 @@ class ContractSerializer < ActiveModel::Serializer
   belongs_to :land
 
   has_many :payments, serializer: PaymentScheduleSerializer
+
+  def payments
+    object.payments.order(payment_date: :asc)
+  end
 end
