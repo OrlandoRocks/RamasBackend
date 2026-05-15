@@ -7,13 +7,17 @@ class ContractsController < ApplicationController
   # GET /contracts
   # @return [void]
   def index
-    @contracts = Contract.all
+    @contracts = policy_scope(Contract)
     render json: @contracts, except: [:payments]
   end
 
   # GET /contracts/1
   # @return [void]
   def show
+    p "@contract@contract@contract@contract@contract@contract@contract"
+    p "@contract@contract@contract@contract@contract@contract@contract"
+    p "@contract@contract@contract@contract@contract@contract@contract"
+    puts @contract.payments.inspect
     render json: @contract
   end
 
@@ -55,6 +59,90 @@ class ContractsController < ApplicationController
   def destroy
     @contract.destroy
     render json: { message: "Contract was successfully destroyed." }, status: :ok
+  end
+
+  def user_contracts
+    @contracts = Contract.where(client_id: params[:id])
+    render json: @contracts, each_serializer: ContractSerializer, adapter: :json_api, status: :ok
+  end
+
+  def current_month_payments
+    @payments = Contract.current_month_payments(current_user&.id)
+    render json: @payments
+  end
+
+  def lands_sold
+    @lands = Contract.lands_sold(current_user&.id)
+    render json: @lands
+  end
+
+  def total_paid
+    @total_paid = Contract.total_paid(current_user&.id)
+    render json: @total_paid
+  end
+
+  def preview_template
+    @contract = Contract.find(params[:id])
+    @seller = @contract.land.residential.user
+    @buyer = @contract.client
+    @land = @contract.land
+    @precio_letras = @land.price.to_i
+
+    latest_version = @contract.contract_versions&.order(created_at: :desc)&.first
+
+    if latest_version
+      html_content = latest_version.html_content
+    else
+      html_content = ActionController::Base.render(
+        template: 'pdf_templates/contract',
+        layout: false,
+        assigns: {
+          contract: @contract,
+          seller: @seller,
+          buyer: @buyer,
+          land: @land,
+          precio_letras: @precio_letras
+        }
+      )
+    end
+
+    render json: { html: html_content }
+  end
+
+  def generate_custom_pdf
+    custom_html = params[:html_content]
+
+    pdf_binary = WickedPdf.new.pdf_from_string(
+      custom_html,
+      page_size: 'Letter',
+      margin: { top: 20, bottom: 20, left: 20, right: 20 }
+    )
+
+    puts "pdf_binarypdf_binarypdf_binarypdf_binarypdf_binary"
+    puts "pdf_binarypdf_binarypdf_binarypdf_binarypdf_binary"
+    puts "pdf_binarypdf_binarypdf_binarypdf_binarypdf_binary"
+    puts pdf_binary
+
+    send_data pdf_binary,
+              filename: "Contrato_Compraventa.pdf",
+              type: "application/pdf",
+              disposition: "attachment"
+  end
+
+  def save_version
+    @contract = Contract.find(params[:id])
+
+    # Creamos la versión con el HTML enviado desde Vue
+    @version = @contract.contract_versions.new(
+      html_content: params[:html_content],
+      version_number: @contract.contract_versions.count + 1
+    )
+
+    if @version.save
+      render json: @version, status: :created
+    else
+      render json: { errors: @version.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private

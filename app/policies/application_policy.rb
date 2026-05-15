@@ -37,6 +37,10 @@ class ApplicationPolicy
     false
   end
 
+  def self.model_name
+    name.demodulize.sub('Policy', '').constantize
+  end
+
   # Scope class
   class Scope
     def initialize(user, scope)

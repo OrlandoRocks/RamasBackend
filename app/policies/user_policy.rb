@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Policy for residential
-class ResidentialPolicy < ApplicationPolicy
-  # Scope class for residential
+# Policy for user
+class UserPolicy < ApplicationPolicy
+  # Scope class for user
   class Scope < Scope
     def resolve
       scope.all
@@ -10,15 +10,15 @@ class ResidentialPolicy < ApplicationPolicy
   end
 
   def show?
-    user.admin? || user.user?
+    user.admin?
   end
 
   def index?
-    user.admin? || user.user?
+    user.admin?
   end
 
   def create?
-    user.user?
+    user.admin?
   end
 
   def update?

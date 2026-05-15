@@ -168,6 +168,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
+    ostruct (0.6.3)
     parallel (1.24.0)
     parser (3.3.1.0)
       ast (~> 2.4.1)
@@ -318,12 +319,17 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wicked_pdf (2.8.2)
+      activesupport
+      ostruct
     wisper (2.0.1)
+    wkhtmltopdf-binary (0.12.6.10)
     zeitwerk (2.6.13)
 
 PLATFORMS
   x86_64-darwin-21
   x86_64-darwin-22
+  x86_64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
@@ -356,7 +362,9 @@ DEPENDENCIES
   sidekiq-scheduler (~> 3.0)
   sqlite3 (~> 1.4)
   tzinfo-data
+  wicked_pdf
   wisper (~> 2.0)
+  wkhtmltopdf-binary
 
 RUBY VERSION
    ruby 3.2.2p53

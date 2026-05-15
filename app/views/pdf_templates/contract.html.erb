@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Contrato de Compraventa</title>
+  <style>
+      /* Estilos base para conservar el formato del PDF original */
+      body {
+          font-family: Arial, sans-serif;
+          font-size: 14px;
+          line-height: 1.6;
+          text-align: justify;
+          color: #000;
+          margin: 0;
+          padding: 0;
+      }
+      h4 {
+          text-align: center;
+          font-weight: bold;
+          margin-top: 25px;
+          margin-bottom: 15px;
+      }
+      p {
+          margin-bottom: 15px;
+      }
+      .bold {
+          font-weight: bold;
+      }
+      .center {
+          text-align: center;
+      }
+      .uppercase {
+          text-transform: uppercase;
+      }
+      .indent {
+          margin-left: 40px;
+      }
+
+      /* Contenedor para alinear las firmas lado a lado */
+      .signature-section {
+          width: 100%;
+          margin-top: 80px;
+          text-align: center;
+          page-break-inside: avoid; /* Evita que las firmas se corten entre páginas */
+      }
+      .signature-box {
+          width: 45%;
+          display: inline-block;
+          vertical-align: top;
+      }
+      .signature-line {
+          border-bottom: 1px solid #000;
+          width: 80%;
+          margin: 0 auto 5px auto;
+      }
+  </style>
+</head>
+  <body>
+
+    <p class="bold">
+      CONTRATO DE COMPRAVENTA DE CASA HABITACIONAL QUE CELEBRAN EL DIA <%= @contract.created_at.day %> DEL MES DE <%= I18n.l(@contract.created_at, format: '%B').upcase %> DEL AÑO <%= @contract.created_at.year %> POR UNA PARTE, EL C. <%= @seller.name.upcase %> EN LO SUCESIVO "VENDEDOR" Y, POR OTRA PARTE, EL C. <%= @buyer.full_name.upcase %> EN LO SUCESIVO LA PARTE "COMPRADORA", RESPECTO DE LA CASA HABITACIÓN UBICADA EN EL TERRENO URBANO IDENTIFICADO COMO LOTE <%= @land.land_code %>, UBICADO EN LA MANZANA <%= @land.block %>, COLONIA 20 ANIVERSARIO DEL MUNICIPIO DE CHIHUAHUA, CHIHUAHUA, AL TENOR DE LOS SIGUIENTES ANTECEDENTES, DECLARACIONES Y CLAUSULAS:
+    </p>
+
+    <h4>ANTECEDENTES</h4>
+
+    <p><span class="bold">I.- LAS PARTES. -</span> Las partes son personas físicas de nacionalidad MEXICANA (VENDEDOR) y (COMPRADORA), las cuales desean suscribir este contrato de compraventa, acorde al cual, una de ellas (VENDEDOR) desea venderle a la otra parte (COMPRADORA), cierta CASA HABITACIÓN UBICADA EN EL TERRENO URBANO IDENTIFICADO COMO LOTE <%= @land.land_code %>, UBICADO EN LA MANZANA <%= @land.block %>, COLONIA 20 ANIVERSARIO DEL MUNICIPIO DE CHIHUAHUA, CHIHUAHUA descrito a mayor detalle en el capitulo de DECLARACIONES de este instrumento contractual.</p>
+
+    <p><span class="bold">II. VOLUNTAD DE LAS PARTES. -</span> EI VENDEDOR es propietario del bien inmueble, el cual desea vender acorde a las leyes de los ESTADOS UNIDOS MEXICANOS, EN ESPECIFICO EL ESTADO DE CHIHUAHUA y en los términos y condiciones estipulados en el presente contrato, mientras que la parte COMPRADORA desea comprar el inmueble de mima manera, acorde a lo estipulado en el presente contrato.</p>
+
+    <h4>DECLARACIONES</h4>
+    <h4>DECLARA LA VENDEDORA</h4>
+
+    <p><span class="bold">I.-</span> Declara el VENDEDOR, ser MEXICANO, mayor de edad, casado con la C. DIANA RODRÍGUEZ GARCIA, bajo el régimen de bienes mancomunados y contar con las facultades legales requeridas para convenir y obligarse dentro del presente contrato, manifiesta haber nacido el día 16 DE MAYO DE 1971 EN LA CIUDAD DE CHIHUAHUA, CHIH, con domicilio en PRIV. DE DURAZNOS NUMERO 402 DEL FRACC. LOS DURAZNOS EN LA CIUDAD DE CHIHUAHUA, CHIH, mismo que se identifica desde este momento con su credencial del elector debidamente expedida por el INSTITUTO NACIONAL ELECTORAL bajo el número de identificación IDMEX1669242123, credencial la cual se anexa en copia simple al presente contracto.</p>
+
+    <p><span class="bold">II.-</span> Continúa declarando el VENDEDOR, manifestando ser el propietario de la casa habitación ubicada en TERRENO URBANO IDENTIFICADO COMO LOTE <%= @land.land_code %>, UBICADO EN LA MANZANA <%= @land.block %>, COLONIA 20 ANIVERSARIO DEL MUNICIPIO DE CHIHUAHUA, CHIHUAHUA, propiedad la cual acredita con la ESCRITURA NÚMERO 131429 DEL LIBRO DE ACTOS FUERA DE PROTOCOLO NÚMERO 13 CON FECHA 2 DE OCTUBRE DE 2008 REALIZADA ANTE LA FE DEL REGISTRADOR PÚBLICO DE LA PROPIEDAD PARA EL DISTRITO JUDICIAL MORELOS, MISMA QUE SE ENCUENTRA DEBIDAMENTE REGISTRADA EN EL REGISTRO PÚBLICO DE LA PROPIEDAD BAJO LOS SIGUIENTES DATOS: INSCRIPCIÓN: 39 FOLIO 39 DEL LIBRO 4568 DE LA SECCIÓN PRIMERA DE ESTE DISTRITO JUDICIAL MORELOS, INSCRIPCIÓN LA CUAL SE RALIZO EL DIA 14 DE OCTUBRE DE 2008, documento el cual se anexa en original al presente instrumento contractual.</p>
+
+    <p><span class="bold">III.</span> Declara el VENDEDOR que la casa habitación objeto del presente contrato cuenta con las siguientes MEDIDAS Y COLINDANCIAS:</p>
+
+    <p class="indent">
+      <span class="bold">SUPERFICIE DE TERRENO:</span> 225.75 metros cuadrados<br>
+      <span class="bold">MEDIDAS Y COLINDANCIAS</span><br>
+      <span class="bold">AL FRENTE:</span> 10.00 metros, CON CALLE C.D.P.<br>
+      <span class="bold">AL FONDO:</span> 10.50 metros, CON LOTE 20<br>
+      <span class="bold">LADO DERECHO:</span> 21.00 metros, CON CALLE FELIPE ANGELES<br>
+      <span class="bold">LADO IZQUIERDO:</span> 21.0 metros, CON LOTE 17
+    </p>
+
+    <p><span class="bold">IV.-</span> Continúa declarando el VENDEDOR, que es su menester vender el lote de terreno objeto del presente contrato, ya que como consta de la escritura descrita en la declaración anterior, el VENDEDOR es el único propietario del lote, por lo que puede disponer libremente del mismo, y que cuenta con todas las facultades legales para vender el lote acorde a lo estipulado en el presente contrato.</p>
+
+    <p><span class="bold">V.-</span> Declara el VENDEDOR, que el lote se encuentra libre de todo gravamen, a la vez que específicamente manifiesta que se encuentra al corriente con el pago de los servicios básicos con los que cuenta el mismo.</p>
+
+    <h4>DECLARA EL COMPRADOR</h4>
+
+    <p><span class="bold">I.-</span> Declara la parte COMPRADORA, ser mexicano, mayor de edad, estado civil divorciado, que es originaria de la ciudad de CHIHUAHUA, CHIHUAHUA, y haber nacido el día 27 DE ABRIL DE 1970, con domicilio en calle EDGAR ALAN POE COL. PONCE DE LEÓN DE ESTA CIUDAD DE CHIHUAHUA, CHIHUAHUA mismo el cual se identifica con su credencial de elector debidamente expedida por el INSTITUTO NACIONAL ELECTORAL bajo el número de identificación IDMEX 1630624914, y, misma que se agregan al presente instrumento en copia simple, y que cuenta con todas y cada una de las facultades legales necesarias para convenir u obligarse dentro del presente instrumento contractual.</p>
+
+    <p><span class="bold">II.-</span> Declara la parte COMPRADORA, tener la capacidad legal y económica para contratar y obligarse en los términos y condiciones del presente contrato, y que desea adquirir la casa habitación objeto del presente contrato, manifestando su conformidad con el estado físico y de conservación que presenta.</p>
+
+    <h4>DECLARAN AMBAS PARTES</h4>
+
+    <p><span class="bold">I.-</span> Declaran conjuntamente las partes, que es su expresa voluntad celebrar el presente contrato, en virtud de lo cual las partes declaran expresamente que ellas y sus abogados han leído, completamente y entendido el presente documento, y que por lo mismo, ratifican todos los párrafos anteriores, los cuales estipulan sin existir dolo, violencia, mala fe, coacción, ni vicio alguno en el consentimiento que pudiera invalidar los mismos, por todo lo anterior ambas partes se someten y sujetan a las siguientes:</p>
+
+    <h4>CLAUSULAS</h4>
+
+    <p><span class="bold">I.- LA COMPRAVENTA.</span> Sujeto a todos los términos y condiciones aquí estipulados en el presente contrato, el VENDEDOR vende a la COMPRADORA, quien adquiere para si y libre de todo gravamen el lote objeto del presente.</p>
+
+    <p><span class="bold">II.- EL PRECIO DEL LOTE.</span> El precio del lote objeto del presente es de <span class="bold">$ <%= number_with_precision(@land.price, precision: 2, delimiter: ',') %> (<%= @precio_letras %> PESOS MONEDA NACIONAL 00/100)</span>, cantidad la cual se liquidará de la forma descrita en la cláusula siguiente:</p>
+
+    <p><span class="bold">III.- FORMA DE PAGO.</span> El pago se de la cantidad mencionada en la cláusula anterior se realizará bajo la siguiente modalidad:</p>
+
+    <p class="indent"><span class="bold">A)</span> El pago por la cantidad de $ 600,000.00 PESOS (SEISCIENTOS MIL PESOS MONEDA NACIONAL 00/100), al momento de la firma del presente contrato, mismo que será efectuado mediante transferencia bancaria realizada por el COMPRADOR a la PARTE VENDEDORA, a la cuenta bancaria designada para tal cuestión.</p>
+
+    <p class="indent"><span class="bold">B)</span> El pago por la cantidad de $ 8,500.00 PESOS (OCHO MIL QUINIENTOS PESOS MONEDA NACIONAL 00/100), la cual se estará depositando de forma mensual a la cuenta bancaria de la parte VENDEDORA, por el lapso de tiempo de un AÑO, contado a partir de la firma del presente instrumento contractual.</p>
+
+    <p><span class="bold">IV.- DESIGNACION DE NOTARIO.</span> La parte COMPRADORA designara al notario, las partes están de acuerdo que la COMPRADORA designe al notario. El cual llevara a cabo la escrituración, obligándose las PARTES a presentarse el día y en la hora, que el notario establezca para la escrituración.</p>
+
+    <p><span class="bold">V. - GASTOS DE LA ESCRITURACION. -</span> Las PARTES convienen que todos los gastos de la escrituración, (honorarios y gastos notariales, avalúos, certificados de no gravamen), así como los impuestos traslativos de dominio, serán por exclusiva cuenta y pago a cargo de la parte COMPRADORA, el que se obliga a pagar en la fecha en que el notario requiera para protocolizar la escritura definitiva.</p>
+
+    <p><span class="bold">VI. - PAGO IMPUESTO SOBRE LA RENTA. -</span> Correrá a cargo del VENDEDOR, el cual se obliga a cubrirlos en su caso al notario, para que este pueda protocolizar la escritura pública del lote objeto del presente contrato.</p>
+
+    <p><span class="bold">VII.- ENTREGA DEL INMUEBLE. -</span> EI VENDEDOR, se compromete a entregar el lote objeto del contrato, el día de la firma del presente instrumento contractual, entendiéndose que dicha entrega se realizara a la parte COMPRADORA para si y sin gravamen alguno, tal y como se especifica en el capitulo de DECLARACIONES del presente contrato.</p>
+
+    <p><span class="bold">VIII. DOMICILIOS.</span> Las PARTES señalan como sus domicilios para su cumplimiento de sus obligaciones y para cualquier notificación al respecto, los domicilios que aparecen en el capitulo de DECLARACIONES del presente contrato.</p>
+
+    <p><span class="bold">IX. PENA CONVENCIONAL POR INCUMPLIMIENTO.</span> Salvo por la intervención de alguna causa de fuerza mayor, en el caso de incumplimiento de este contrato por alguna de las partes, las mismas expresamente convienen en que la parte infractora, le pagara a la otra la suma de $ 25, 000.00 (VEINTE Y CINCO MIL PESOS MONEDA NACIONAL 00/100), como pena convencional, esto independientemente de cualquier otra acción o acciones que pudiese ejercitar la parte dañada relativo al cumplimiento o rescisión del presente contrato.</p>
+
+    <p><span class="bold">XI.</span> Este contrato constituye el ultimo y exclusivo acuerdo entre las partes, las partes reconocen expresamente, convienen y aceptan que el presente contrato y sus anexos constituyen su ultimo y total acuerdo sobre el objeto y materia del mismo, motivo por el cual quedan sin efecto cualquier otra negociación, oferta, convenio o acuerdo, oral o escrito, anterior a esta fecha.</p>
+
+    <p><span class="bold">XII.- JURISDICCION. -</span> En el caso de que surgiere una controversia relativa a la interpretación, ejecución y/o cumplimiento de este contrato, las partes se someten expresamente a las leyes y tribunales de LA CIUDAD DE CHIHUAHUA, DISTRITO JUDICIAL MORELOS renunciando en este acto a cualquier otro fuero al que tuviesen derecho por razón de su domicilio presente o futuro.</p>
+
+    <p class="bold center uppercase">DECLARAN EXPRESAMENTE LAS PARTES QUE ELLAS Y SUS RESPECTIVOS ABOGADOS HAN LEIDO Y ENTENDIDO PERFECTAMENTE EL SIGNIFICADO Y ALCANCE DE TODOS LOS PARRAFOS ESTIPULADOS EN ESTE CONTRATO, Y QUE, ACORDE, FIRMAN AL CALCE ENTRE TANTOS CON EL MISMO VALOR PROBATORIO Y JURIDICO CADA UNO DE ELLOS, EN LA CIUDAD DE CHIHUAHUA, CHIH, EL DIA <%= @contract.created_at.day %> DEL MES DE <%= I18n.l(@contract.created_at, format: '%B').upcase %> DEL AÑO <%= @contract.created_at.year %></p>
+
+    <div class="signature-section">
+      <div class="signature-box">
+        <div class="signature-line"></div>
+        <span class="bold">C. <%= @seller.name.upcase %></span><br>
+        "VENDEDOR"
+      </div>
+
+      <div class="signature-box">
+        <div class="signature-line"></div>
+        <span class="bold">C. <%= @buyer.full_name.upcase %></span><br>
+        "COMPRADORA"
+      </div>
+    </div>
+
+  </body>
+</html>

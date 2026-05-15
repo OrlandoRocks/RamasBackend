@@ -2,7 +2,7 @@
 
 # serializer for contract model
 class ContractSerializer < ActiveModel::Serializer
-  attributes :id, :client_id, :client_name, :land_id, :land_code, :contract_date, :type, :down_payment,
+  attributes :id, :client_id, :client_name, :land_id, :land_code, :contract_date, :contract_type, :down_payment,
              :monthly_payment, :yearly_payment, :months, :penalty_interest, :extraordinary_payment,
              :total_price, :total_paid, :payments
 
@@ -26,4 +26,8 @@ class ContractSerializer < ActiveModel::Serializer
   belongs_to :land
 
   has_many :payments, serializer: PaymentSerializer
+
+  def payments
+    object.payments.order(payment_date: :asc)
+  end
 end

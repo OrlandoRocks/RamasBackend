@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Contrato de Compraventa</title>
+    <style>
+        /* Estilos base para conservar el formato del PDF original */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: justify;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        h4 {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .center {
+            text-align: center;
+        }
+        .uppercase {
+            text-transform: uppercase;
+        }
+        .indent {
+            margin-left: 40px;
+        }
+
+        /* Contenedor para alinear las firmas lado a lado */
+        .signature-section {
+            width: 100%;
+            margin-top: 80px;
+            text-align: center;
+            page-break-inside: avoid; /* Evita que las firmas se corten entre páginas */
+        }
+        .signature-box {
+            width: 45%;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 80%;
+            margin: 0 auto 5px auto;
+        }
+    </style>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>
