@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 
 # Description: Controller for contracts model
 class ContractsController < ApplicationController
@@ -7,20 +7,25 @@ class ContractsController < ApplicationController
   # GET /contracts
   # @return [void]
   def index
-    @contracts = Contract.all
-    render json: @contracts, except: [:payments]
+    @contracts = policy_scope(Contract).includes(:client, :payments, land: :residential)
+    authorize Contract
+
+    render json: @contracts, each_serializer: ContractIndexSerializer
   end
 
   # GET /contracts/1
   # @return [void]
   def show
-    render json: @contract
+    authorize @contract
+    render json: @contract, serializer: ContractSerializer
   end
 
   # GET /contracts/1/payments
   # @return [void]
   def payments
-    @contract = Contract.find(params[:contract_id])
+    @contract = policy_scope(Contract).find(params[:id])
+    authorize @contract, :payments?
+
     @payments = @contract.payments
     render json: @payments
   end
@@ -29,6 +34,8 @@ class ContractsController < ApplicationController
   # @return [void]
   def create
     @contract = Contract.new(contract_params)
+
+    authorize @contract
 
     ActiveRecord::Base.transaction do
       if @contract.save
@@ -43,6 +50,7 @@ class ContractsController < ApplicationController
   # PATCH/PUT /contracts/1
   # @return [void]
   def update
+    authorize @contract
     if @contract.update(contract_params)
       render json: @contract
     else
@@ -53,6 +61,7 @@ class ContractsController < ApplicationController
   # DELETE /contracts/1
   # @return [void]
   def destroy
+    authorize @contract
     @contract.destroy
     render json: { message: "Contract was successfully destroyed." }, status: :ok
   end
@@ -62,13 +71,13 @@ class ContractsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   # @return [void]
   def set_contract
-    @contract = Contract.find(params[:id])
+    @contract = policy_scope(Contract).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   # @return [void]
   def contract_params
-    params.require(:contract).permit(:contract_date, :type, :down_payment, :monthly_payment,
+    params.require(:contract).permit(:contract_date, :contract_type, :down_payment, :monthly_payment,
                                      :yearly_payment, :months, :penalty_interest,
                                      :extraordinary_payment, :client_id, :land_id,
                                      payments_attributes: %i[id amount payment_date payment_type

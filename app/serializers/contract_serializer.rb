@@ -2,7 +2,7 @@
 
 # serializer for contract model
 class ContractSerializer < ActiveModel::Serializer
-  attributes :id, :client_id, :client_name, :land_id, :land_code, :contract_date, :type, :down_payment,
+  attributes :id, :client_id, :client_name, :land_id, :land_code, :contract_date, :contract_type, :down_payment,
              :monthly_payment, :yearly_payment, :months, :penalty_interest, :extraordinary_payment,
              :total_price, :total_paid, :payments
 
@@ -19,7 +19,7 @@ class ContractSerializer < ActiveModel::Serializer
   end
 
   def total_paid
-    object.payments.where(status: Payment.payment_statuses["Pagado"]).sum(:amount).to_s
+    object.payments.where(status: Payment.paid_status_values).sum(:amount).to_s
   end
 
   belongs_to :client

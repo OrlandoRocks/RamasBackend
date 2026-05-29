@@ -2,8 +2,7 @@
 
 FactoryBot.define do
   factory :land do
-    residential { nil }
-    type { "" }
+    residential
     address { "MyString" }
     block { "MyString" }
     size { 1.5 }

@@ -10,6 +10,12 @@ gem "rails", "~> 7.0.5"
 
 gem "pg"
 
+# PostGIS adapter for ActiveRecord with geometry support
+gem "activerecord-postgis-adapter"
+gem "rgeo"
+gem "rgeo-shapefile"
+gem "rgeo-geojson"
+
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", "~> 1.4"
 
@@ -48,6 +54,7 @@ gem "sidekiq-scheduler", "~> 3.0"
 gem "wisper", "~> 2.0"
 
 gem "aws-sdk-s3", "~> 1.96"
+gem "rubyzip", require: "zip"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

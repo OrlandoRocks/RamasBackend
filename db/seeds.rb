@@ -8,8 +8,14 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-admin_role = Role.create(name: 'admin')
-Role.create(name: 'client')
-Role.create(name: 'user')
+admin_role = Role.find_or_create_by!(name: "admin")
+Role.find_or_create_by!(name: "client")
+Role.find_or_create_by!(name: "user")
+Role.find_or_create_by!(name: "super_user")
 
-User.create(email: 'admin@user.com', password: 'password', name: 'Admin', last_name: 'User', role: admin_role)
+User.find_or_create_by!(email: "admin@user.com") do |u|
+  u.password = "password"
+  u.name = "Admin"
+  u.last_name = "User"
+  u.role = admin_role
+end

@@ -4,6 +4,8 @@
 # @see https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Object.html#presigned_url-instance_method
 class S3PresignedUrlController < ApplicationController
   def create
+    authorize :s3_presigned_url, :create?
+
     s3_client = Aws::S3::Resource.new
     obj = s3_client.bucket(ENV.fetch("S3_BUCKET_NAME",
                                      nil)).object("uploads/#{SecureRandom.uuid}/#{params[:file_name]}")

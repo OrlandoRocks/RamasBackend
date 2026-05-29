@@ -1,31 +1,39 @@
 # frozen_string_literal: true
 
-# Policy for expense
 class ExpensePolicy < ApplicationPolicy
-  # Scope class for expense
   class Scope < Scope
     def resolve
-      scope.all
+      return scope.none unless user
+
+      return scope.all if staff?
+
+      return scope.joins(:residential).where(residentials: { user_id: user.id }) if seller?
+
+      scope.none
     end
   end
 
-  def show?
-    true
+  def index?
+    authenticated? && !client?
   end
 
-  def index?
-    true
+  def show?
+    manage_business_resources? ||
+      (seller? && record.residential&.user_id == user.id)
   end
 
   def create?
-    user.admin? || record.user?
+    manage_business_resources? ||
+      (seller? &&
+        owns_residential?(Residential.find_by(id: record.residential_id)) &&
+        record.user_id == user.id)
   end
 
   def update?
-    create?
+    manage_business_resources?
   end
 
   def destroy?
-    create?
+    manage_business_resources?
   end
 end

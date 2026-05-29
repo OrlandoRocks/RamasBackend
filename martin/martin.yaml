@@ -1,0 +1,20 @@
+# Martin Vector Tile Server Configuration
+# Documentation: https://maplibre.org/martin/
+
+listen_addresses: '0.0.0.0:3030'
+
+# Enable CORS for frontend access
+cors: true
+
+# PostgreSQL/PostGIS connection
+postgres:
+  connection_string: ${DATABASE_URL}
+
+  # Use function-based source (more reliable than table source)
+  functions:
+    geo_layers:
+      schema: public
+      function: geo_layers_mvt
+      minzoom: 0
+      maxzoom: 22
+      bounds: [-99.17, 19.40, -99.12, 19.43]

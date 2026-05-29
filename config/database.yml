@@ -5,10 +5,10 @@
 #   gem "sqlite3"
 #
 default: &default
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
-  username: postgres
-  password: postgres
+  username: odela3
+  password:
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: localhost
 

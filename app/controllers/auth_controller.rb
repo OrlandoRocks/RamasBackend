@@ -15,6 +15,8 @@ class AuthController < ApplicationController
   end
 
   def logout
+    authorize :auth, :logout?
+
     jwt_token = decoded_token
     Rails.logger.debug { "jwt_token: #{jwt_token}" }
     JwtDenylist.create(jti: jwt_token["jti"], exp: Time.zone.at(jwt_token["exp"]))

@@ -7,14 +7,16 @@ class ExpensesController < ApplicationController
   # GET /expenses
   # @return [void]
   def index
-    @expenses = Expense.all
-    authorize @expenses
+    @expenses = policy_scope(Expense)
+    authorize Expense
+
     render json: @expenses
   end
 
   # GET /expenses/1
   # @return [void]
   def show
+    authorize @expense
     render json: @expense, serializer: ExpenseSerializer
   end
 
@@ -22,6 +24,9 @@ class ExpensesController < ApplicationController
   # @return [void]
   def create
     @expense = Expense.new(expense_params)
+    @expense.user_id = current_user.id unless current_user.staff?
+
+    authorize @expense
 
     if @expense.save
       render json: @expense, serializer: ExpenseSerializer, status: :created
@@ -33,6 +38,7 @@ class ExpensesController < ApplicationController
   # PATCH/PUT /expenses/1
   # @return [void]
   def update
+    authorize @expense
     if @expense.update(expense_params)
       render json: @expense, serializer: ExpenseSerializer, status: :ok
     else
@@ -43,6 +49,7 @@ class ExpensesController < ApplicationController
   # DELETE /expenses/1
   # @return [void]
   def destroy
+    authorize @expense
     @expense.destroy
     render json: { message: "Expense was successfully destroyed." }, status: :ok
   end
@@ -52,7 +59,7 @@ class ExpensesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   # @return [void]
   def set_expense
-    @expense = Expense.find(params[:id])
+    @expense = policy_scope(Expense).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
