@@ -10,9 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
+ActiveRecord::Schema[7.0].define(version: 2026_08_02_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "postgis"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string "code"
@@ -44,6 +73,9 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ine_verification_status", default: "pending", null: false
+    t.string "tax_document_verification_status", default: "pending", null: false
+    t.string "proof_of_address_verification_status", default: "pending", null: false
   end
 
   create_table "contract_versions", force: :cascade do |t|
@@ -86,6 +118,30 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
+  create_table "geo_layers", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "layer_type"
+    t.text "description"
+    t.jsonb "properties", default: {}
+    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
+    t.bigint "residential_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geometry"], name: "index_geo_layers_on_geometry", using: :gist
+    t.index ["layer_type"], name: "index_geo_layers_on_layer_type"
+    t.index ["name"], name: "index_geo_layers_on_name"
+    t.index ["residential_id"], name: "index_geo_layers_on_residential_id"
+  end
+
+  create_table "geo_layers_geom", id: :bigint, default: nil, force: :cascade do |t|
+    t.string "name"
+    t.string "layer_type"
+    t.text "description"
+    t.bigint "residential_id"
+    t.geometry "geom", limit: {:srid=>4326, :type=>"geometry"}
+    t.index ["geom"], name: "idx_geo_layers_geom", using: :gist
+  end
+
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
@@ -104,6 +160,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
     t.string "house_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
+    t.index ["geometry"], name: "index_lands_on_geometry", using: :gist
     t.index ["residential_id"], name: "index_lands_on_residential_id"
   end
 
@@ -120,14 +178,34 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
     t.index ["contract_id"], name: "index_payments_on_contract_id"
   end
 
+  create_table "residential_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "residential_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["residential_id"], name: "index_residential_assignments_on_residential_id"
+    t.index ["user_id", "residential_id"], name: "index_residential_assignments_on_user_and_residential", unique: true
+    t.index ["user_id"], name: "index_residential_assignments_on_user_id"
+  end
+
+  create_table "residential_clients", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "residential_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id", "residential_id"], name: "index_residential_clients_on_client_and_residential", unique: true
+    t.index ["client_id"], name: "index_residential_clients_on_client_id"
+    t.index ["residential_id"], name: "index_residential_clients_on_residential_id"
+  end
+
   create_table "residentials", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.decimal "cost"
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_residentials_on_user_id"
+    t.geography "boundary", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
+    t.index ["boundary"], name: "index_residentials_on_boundary", using: :gist
   end
 
   create_table "roles", force: :cascade do |t|
@@ -144,17 +222,26 @@ ActiveRecord::Schema[7.0].define(version: 2026_04_30_180611) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "role_id", null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_users_on_client_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "contract_versions", "contracts"
   add_foreign_key "contracts", "clients"
   add_foreign_key "contracts", "lands"
   add_foreign_key "expenses", "residentials"
   add_foreign_key "expenses", "users"
+  add_foreign_key "geo_layers", "residentials"
   add_foreign_key "lands", "residentials"
   add_foreign_key "payments", "contracts"
-  add_foreign_key "residentials", "users"
+  add_foreign_key "residential_assignments", "residentials"
+  add_foreign_key "residential_assignments", "users"
+  add_foreign_key "residential_clients", "clients"
+  add_foreign_key "residential_clients", "residentials"
+  add_foreign_key "users", "clients"
   add_foreign_key "users", "roles"
 end

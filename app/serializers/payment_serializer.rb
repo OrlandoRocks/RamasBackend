@@ -7,11 +7,13 @@ class PaymentSerializer < ActiveModel::Serializer
 
 
   def payment_status_name
-    object.class.payment_statuses.key(object.status.to_i)
+    raw_status = object.attributes_before_type_cast["status"]
+    Payment.status_label(raw_status)
   end
 
   def client_name
-    "#{object.contract.client.full_name.to_s} > #{object.contract.client.phone_number.to_s.insert(3, '-').insert(7, '-')}"
+    client = object.contract.client
+    "#{client.full_name} > #{Payment.format_phone(client.phone_number)}"
   end
 
   def land_code

@@ -1,31 +1,36 @@
 # frozen_string_literal: true
 
-# Policy for user
 class UserPolicy < ApplicationPolicy
-  # Scope class for user
   class Scope < Scope
     def resolve
+      return scope.none unless user&.super_user?
+
       scope.all
     end
   end
 
-  def show?
-    user.admin?
+  def index?
+    super_user?
   end
 
-  def index?
-    user.admin?
+  def show?
+    super_user?
+  end
+
+  # GET /member-data — any authenticated user reading their own profile
+  def profile?
+    record == user
   end
 
   def create?
-    user.admin?
+    super_user?
   end
 
   def update?
-    user.admin?
+    super_user?
   end
 
   def destroy?
-    user.admin?
+    super_user?
   end
 end

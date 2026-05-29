@@ -2,10 +2,10 @@
 
 FactoryBot.define do
   factory :contract do
-    client { nil }
-    land { nil }
+    client
+    land
     contract_date { "2024-03-22" }
-    type { "" }
+    contract_type { "SomeType" }
     down_payment { "9.99" }
     monthly_payment { "9.99" }
     yearly_payment { "9.99" }

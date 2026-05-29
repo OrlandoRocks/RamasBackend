@@ -1,31 +1,39 @@
 # frozen_string_literal: true
 
-# Policy for client
 class ClientPolicy < ApplicationPolicy
-  # Scope class for client
   class Scope < Scope
     def resolve
-      scope.all
+      return scope.none unless user
+
+      return scope.all if super_user?
+
+      return scope.where(id: user.client_id) if client? && user.client_id.present?
+
+      return scope.joins(:residentials).where(residentials: { id: assigned_residential_ids }).distinct if staff? || seller?
+
+      scope.none
     end
   end
 
-  def show?
-    user.admin? || user.user?
+  def index?
+    staff? || seller?
   end
 
-  def index?
-    user.admin? || user.user?
+  def show?
+    client_visible?(record)
   end
 
   def create?
-    user.user?
+    manage_business_resources?
   end
 
   def update?
-    user.admin?
+    return true if client? && user.client_id.present? && record.id == user.client_id
+
+    manage_business_resources? && client_visible?(record)
   end
 
   def destroy?
-    user.admin?
+    manage_business_resources? && client_visible?(record)
   end
 end

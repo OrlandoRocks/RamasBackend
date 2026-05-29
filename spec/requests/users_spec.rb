@@ -16,9 +16,9 @@ RSpec.describe "Users" do
     }
   end
 
-  describe "POST /users" do
+  describe "POST /signup" do
     it "creates a new user and returns the user object with a token" do
-      post '/signup', params: user_params
+      post "/signup", params: user_params
       expect(response).to have_http_status(:created)
       expect(json['data']['attributes']['email']).to eq(user_params[:user][:email])
       expect(json['meta']).to have_key('token')
@@ -26,7 +26,7 @@ RSpec.describe "Users" do
 
     context "when missing required parameters" do
       it "returns a bad request response" do
-        post '/signup', params: { user: { name: "John", role_id: role.id } }
+        post "/signup", params: { user: { name: "John", role_id: role.id } }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json['errors']).to include("Password can't be blank", "Email can't be blank")
       end

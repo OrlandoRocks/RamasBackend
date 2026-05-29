@@ -5,6 +5,9 @@ class ApplicationController < ActionController::API
   include Pundit::Authorization
   before_action :authorized
 
+  after_action :verify_authorized, unless: :skip_verify_authorized?
+  after_action :verify_policy_scoped, if: :verify_policy_scoped_for_action?
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   POLICY_CLASSES = [ ClientPolicy, ContractPolicy, ExpensePolicy, LandPolicy, PaymentPolicy, ResidentialPolicy, UserPolicy ]
@@ -31,12 +34,13 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    return @user if @user
+    return @current_user if defined?(@current_user)
 
+    @current_user = nil
     return nil unless decoded_token
 
     user_id = decoded_token["user_id"]
-    @user = User.find_by(id: user_id)
+    @current_user = User.find_by(id: user_id)
   end
 
   def permissions(user)
@@ -65,7 +69,22 @@ class ApplicationController < ActionController::API
     render json: { message: "Please log in" }, status: :unauthorized unless current_user
   end
 
+  def pundit_user
+    current_user
+  end
+
   private
+
+  def skip_verify_authorized?
+    (controller_path == "auth" && action_name == "login") ||
+      (controller_path == "users" && action_name == "signup")
+  end
+
+  def verify_policy_scoped_for_action?
+    return false if skip_verify_authorized?
+
+    action_name == "index"
+  end
 
   def user_not_authorized
     render json: { error: "No estas autorizado para realizar esta accion!" }, status: :forbidden

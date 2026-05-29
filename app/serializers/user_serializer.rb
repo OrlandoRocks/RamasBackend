@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
-# serializer for user model
+# Serializer for user model (signup, profile, and super-user management).
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :last_name, :email, :role_id, :role_name, :full_name
+  attributes :id, :name, :last_name, :email, :role_id, :client_id, :role_name,
+             :residential_ids, :created_at, :updated_at
 
-  def full_name
-    "#{object.name} #{object.last_name}"
+  def residential_ids
+    object.residential_ids
   end
 
   def role_name
-    "#{object.role.name}"
+    object.role&.name
   end
-
-  belongs_to :role
 end

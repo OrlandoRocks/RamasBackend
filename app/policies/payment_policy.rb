@@ -1,31 +1,55 @@
 # frozen_string_literal: true
 
-# Policy for payment
 class PaymentPolicy < ApplicationPolicy
-  # Scope class for payment
   class Scope < Scope
     def resolve
-      scope.all
+      return scope.none unless user
+
+      return scope.all if super_user?
+
+      if staff? || seller?
+        return scope.joins(contract: { land: { residential: :users } }).where(users: { id: user.id }).distinct
+      end
+
+      if client? && user.client_id.present?
+        return scope.joins(:contract).where(contracts: { client_id: user.client_id })
+      end
+
+      scope.none
     end
   end
 
-  def show?
-    user.admin? || user.user?
+  def index?
+    authenticated?
   end
 
-  def index?
-    user.admin? || user.user?
+  def show?
+    client_owns_contract?(record.contract) ||
+      ((manage_business_resources? || seller?) && assigned_to_residential?(record.contract&.land&.residential))
   end
 
   def create?
-    user.user?
+    (manage_business_resources? || seller?) && assigned_to_residential?(record.contract&.land&.residential)
   end
 
   def update?
-    user.admin?
+    return false if client?
+
+    (manage_business_resources? || seller?) &&
+      assigned_to_residential?(record.contract&.land&.residential)
   end
 
   def destroy?
-    user.admin?
+    manage_business_resources? && assigned_to_residential?(record.contract&.land&.residential)
+  end
+
+  def payment_statuses?
+    authenticated?
+  end
+
+  private
+
+  def client_owns_contract?(contract)
+    client? && user.client_id.present? && contract&.client_id == user.client_id
   end
 end

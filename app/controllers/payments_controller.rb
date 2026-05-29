@@ -5,20 +5,25 @@ class PaymentsController < ApplicationController
   before_action :set_payment, only: %i[show update destroy]
 
   def index
-    @payments = Payment.all
+    @payments = policy_scope(Payment)
+    authorize Payment
+
     render json: @payments, except: [:contract]
   end
 
   def show
-    render json: Payment.find(params[:id]), serializer: PaymentSerializer, include_contract: true
+    authorize @payment
+    render json: @payment, serializer: PaymentSerializer, include_contract: true
   end
 
   def payment_statuses
-    render json: Payment.payment_statuses
+    authorize Payment, :payment_statuses?
+    render json: Payment.statuses
   end
 
   def create
     @payment = Payment.new(payment_params)
+    authorize @payment
     if @payment.save
       render json: @payment, status: :created
     else
@@ -27,49 +32,68 @@ class PaymentsController < ApplicationController
   end
 
   def update
-    expected_amount = @payment.amount
+    authorize @payment
 
-    if @payment.update(payment_params)
-      actual_amount = params[:payment][:amount].to_f
-
-      if @payment.status.to_i == Payment.payment_statuses["Pagado"] && actual_amount != expected_amount
-        recalculate_future_payments(expected_amount, actual_amount)
+    begin
+      @payment.contract.with_schedule_lock do
+        if @payment.update(payment_params)
+          adjusted = @payment.last_redistribution_adjusted || []
+          response.headers["X-Adjusted-Payments-Count"] = adjusted.size.to_s if amount_param_present?
+          render json: @payment.reload, serializer: PaymentSerializer, status: :ok
+        else
+          render json: { errors: @payment.errors }, status: :unprocessable_entity
+        end
       end
-
-      render json: @payment, status: :ok
-    else
-      render json: { errors: @payment.errors }, status: :unprocessable_entity
+    rescue PaymentAmountRedistributor::Error => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
-  def update_amount(new_amount)
-    if new_amount > @payment.amount
-      # Adjust the oldest payment date's amount
-      oldest_payment =
-        @payment.contract.payments.where.not(status: Payment.payment_statuses["Pagado"]).order(payment_date: :asc).last
-      oldest_payment.update(amount: oldest_payment.amount + (new_amount - @payment.amount))
-    elsif new_amount < @payment.amount
-      # Adjust the oldest payment date's amount
-      oldest_payment =
-        @payment.contract.payments.where.not(status: Payment.payment_statuses["Pagado"]).order(payment_date: :asc).last
-      oldest_payment.update(amount: oldest_payment.amount - (@payment.amount - new_amount))
-    end
-
-    if oldest_payment.amount <= 0
-      # Change the payment status to paid
-      oldest_payment.update(status: Payment.payment_statuses["Pagado"])
-    end
-  end
+  # def update
+  #   expected_amount = @payment.amount
+  #
+  #   if @payment.update(payment_params)
+  #     actual_amount = params[:payment][:amount].to_f
+  #
+  #     if @payment.status.to_i == Payment.payment_statuses["Pagado"] && actual_amount != expected_amount
+  #       recalculate_future_payments(expected_amount, actual_amount)
+  #     end
+  #
+  #     render json: @payment, status: :ok
+  #   else
+  #     render json: { errors: @payment.errors }, status: :unprocessable_entity
+  #   end
+  # end
+  #
+  # def update_amount(new_amount)
+  #   if new_amount > @payment.amount
+  #     # Adjust the oldest payment date's amount
+  #     oldest_payment =
+  #       @payment.contract.payments.where.not(status: Payment.payment_statuses["Pagado"]).order(payment_date: :asc).last
+  #     oldest_payment.update(amount: oldest_payment.amount + (new_amount - @payment.amount))
+  #   elsif new_amount < @payment.amount
+  #     # Adjust the oldest payment date's amount
+  #     oldest_payment =
+  #       @payment.contract.payments.where.not(status: Payment.payment_statuses["Pagado"]).order(payment_date: :asc).last
+  #     oldest_payment.update(amount: oldest_payment.amount - (@payment.amount - new_amount))
+  #   end
+  #
+  #   if oldest_payment.amount <= 0
+  #     # Change the payment status to paid
+  #     oldest_payment.update(status: Payment.payment_statuses["Pagado"])
+  #   end
+  # end
 
   def destroy
+    authorize @payment
     @payment.destroy
-    render json: { message: 'Payment deleted' }, status: :ok
+    render json: { message: "Payment deleted" }, status: :ok
   end
 
   private
 
   def set_payment
-    @payment = Payment.find(params[:id])
+    @payment = policy_scope(Payment).find(params[:id])
   end
 
   def recalculate_future_payments(expected_amount, actual_amount)
@@ -116,5 +140,12 @@ class PaymentsController < ApplicationController
 
   def payment_params
     params.require(:payment).permit(:amount, :payment_date, :payment_type, :comments, :image_url, :contract_id, :status)
+  end
+
+  def amount_param_present?
+    return true if params.key?(:amount)
+
+    payment = params[:payment]
+    payment.is_a?(ActionController::Parameters) ? payment.key?(:amount) : payment.to_h.key?(:amount)
   end
 end

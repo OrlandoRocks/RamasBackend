@@ -19,7 +19,7 @@ class ContractSerializer < ActiveModel::Serializer
   end
 
   def total_paid
-    object.payments.where(status: Payment.payment_statuses["Pagado"]).sum(:amount).to_s
+    object.payments.where(status: Payment.paid_status_values).sum(:amount).to_s
   end
 
   belongs_to :client

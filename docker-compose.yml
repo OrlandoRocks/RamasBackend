@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres:14
+    image: postgis/postgis:14-3.3
     environment:
       DATABASE_HOST: localhost
       POSTGRES_DB: ramas_dev
@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   test_db:
-    image: postgres:14
+    image: postgis/postgis:14-3.3
     environment:
       DATABASE_HOST: db
       POSTGRES_DB: ramas_test
@@ -25,7 +25,7 @@ services:
       - test_postgres_data:/var/lib/postgresql/data
 
   prod_db:
-    image: postgres:14
+    image: postgis/postgis:14-3.3
     environment:
       POSTGRES_DB: ramas_prod
       POSTGRES_USER: ramas_postgres
@@ -34,6 +34,32 @@ services:
       - "5434:5432"
     volumes:
       - prod_postgres_data:/var/lib/postgresql/data
+
+  martin:
+    image: ghcr.io/maplibre/martin:latest
+    restart: unless-stopped
+    ports:
+      - "3030:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ramas_dev
+    depends_on:
+      - db
+    command: --config /config/martin.yaml
+    volumes:
+      - ./martin:/config
+
+  martin_prod:
+    image: ghcr.io/maplibre/martin:latest
+    restart: unless-stopped
+    ports:
+      - "3031:3000"
+    environment:
+      - DATABASE_URL=postgresql://ramas_postgres:rbr123qwe@prod_db:5432/ramas_prod
+    depends_on:
+      - prod_db
+    command: --config /config/martin.yaml
+    volumes:
+      - ./martin:/config
 
   web:
     build:
@@ -45,6 +71,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - martin
 
   test_web:
     build:
@@ -65,6 +92,7 @@ services:
       - "3001:3000"
     depends_on:
       - prod_db
+      - martin_prod
 
 volumes:
   postgres_data:
