@@ -2,7 +2,12 @@
 
 # Description: Residential model that represents a residential development with boundary geometry.
 class Residential < ApplicationRecord
-  belongs_to :user
+  include ResidentialMapDisplay
+  has_many :residential_assignments, dependent: :destroy
+  has_many :users, through: :residential_assignments
+
+  has_many :residential_clients, dependent: :destroy
+  has_many :linked_clients, through: :residential_clients, source: :client
 
   has_many :lands, dependent: :nullify
   has_many :expenses, dependent: :nullify

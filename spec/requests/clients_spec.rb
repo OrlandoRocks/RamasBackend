@@ -3,8 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Clients" do
-  let!(:clients) { create_list(:client, 3) }
-  let(:user) { create(:user, role: create(:role)) }
+  let(:admin_role) { Role.find_or_create_by!(name: "admin") }
+  let(:user) { create(:user, role: admin_role) }
+  let(:residential) { create(:residential, assigned_user: user) }
+  let!(:clients) do
+    create_list(:client, 3).each do |client|
+      ResidentialClient.create!(client: client, residential: residential)
+    end
+  end
 
   before do
     sign_in(user)

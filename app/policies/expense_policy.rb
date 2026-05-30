@@ -5,9 +5,8 @@ class ExpensePolicy < ApplicationPolicy
     def resolve
       return scope.none unless user
 
-      return scope.all if staff?
-
-      return scope.joins(:residential).where(residentials: { user_id: user.id }) if seller?
+      return scope.all if super_user?
+      return scope.joins(residential: :users).where(users: { id: user.id }).distinct if staff? || seller?
 
       scope.none
     end
@@ -18,22 +17,21 @@ class ExpensePolicy < ApplicationPolicy
   end
 
   def show?
-    manage_business_resources? ||
-      (seller? && record.residential&.user_id == user.id)
+    (manage_business_resources? || seller?) && assigned_to_residential?(record.residential)
   end
 
   def create?
-    manage_business_resources? ||
-      (seller? &&
-        owns_residential?(Residential.find_by(id: record.residential_id)) &&
-        record.user_id == user.id)
+    residential = Residential.find_by(id: record.residential_id)
+    (manage_business_resources? || seller?) &&
+      assigned_to_residential?(residential) &&
+      (manage_business_resources? || record.user_id == user.id)
   end
 
   def update?
-    manage_business_resources?
+    manage_business_resources? && assigned_to_residential?(record.residential)
   end
 
   def destroy?
-    manage_business_resources?
+    manage_business_resources? && assigned_to_residential?(record.residential)
   end
 end

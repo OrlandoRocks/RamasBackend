@@ -53,6 +53,7 @@ class UsersController < ApplicationController
     attrs = attrs.except(:password) if attrs[:password].blank?
 
     if @user.update(attrs)
+      sync_residential_assignments!(@user)
       render json: @user, serializer: UserSerializer, adapter: :json_api
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
@@ -84,7 +85,15 @@ class UsersController < ApplicationController
   end
 
   def management_params
-    params.require(:user).permit(:name, :last_name, :email, :password, :role_id, :client_id)
+    params.require(:user).permit(:name, :last_name, :email, :password, :role_id, :client_id, residential_ids: [])
+  end
+
+  def sync_residential_assignments!(user)
+    ids = params.dig(:user, :residential_ids)
+    return if ids.nil?
+    return if user.client?
+
+    user.residential_ids = ids.reject(&:blank?).map(&:to_i)
   end
 
   def assignable_roles

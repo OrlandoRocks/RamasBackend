@@ -6,8 +6,11 @@ class Client < ApplicationRecord
 
   has_many :contracts, dependent: :nullify
   has_many :lands, through: :contracts
-  has_many :residentials, through: :lands
   has_many :payments, through: :lands
+
+  has_many :residential_clients, dependent: :destroy
+  has_many :residentials, through: :residential_clients
+
   has_many :users, through: :contracts
 
   validates :ine_verification_status,

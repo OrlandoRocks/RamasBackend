@@ -8,4 +8,15 @@ class Contract < ApplicationRecord
   has_many :payments, dependent: :destroy
 
   accepts_nested_attributes_for :payments
+
+  after_save :link_client_to_residential
+
+  private
+
+  def link_client_to_residential
+    residential_id = land&.residential_id
+    return unless residential_id && client_id
+
+    ResidentialClient.link!(client_id: client_id, residential_id: residential_id)
+  end
 end

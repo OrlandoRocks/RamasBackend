@@ -5,11 +5,9 @@ class ResidentialPolicy < ApplicationPolicy
     def resolve
       return scope.none unless user
 
-      return scope.all if user.super_user? || user.admin?
+      return scope.all if super_user?
 
-      return scope.where(user_id: user.id) if user.seller?
-
-      scope.none
+      scope.joins(:users).where(users: { id: user.id }).distinct
     end
   end
 
@@ -18,7 +16,7 @@ class ResidentialPolicy < ApplicationPolicy
   end
 
   def show?
-    manage_business_resources? || (seller? && owns_residential?(record))
+    (manage_business_resources? || seller?) && assigned_to_residential?(record)
   end
 
   def create?
@@ -26,14 +24,13 @@ class ResidentialPolicy < ApplicationPolicy
   end
 
   def update?
-    manage_business_resources?
+    manage_business_resources? && assigned_to_residential?(record)
   end
 
   def destroy?
-    manage_business_resources?
+    manage_business_resources? && assigned_to_residential?(record)
   end
 
-  # Member routes: geojson / lands_geojson — same as show
   def geojson?
     show?
   end
@@ -42,13 +39,11 @@ class ResidentialPolicy < ApplicationPolicy
     show?
   end
 
-  # Shapefile / bulk land import into this development
   def import_lands?
-    manage_business_resources? || (seller? && owns_residential?(record))
+    (manage_business_resources? || seller?) && assigned_to_residential?(record)
   end
 
-  # Geo layer import tied to this residential
   def import_geo_layers?
-    manage_business_resources? || (seller? && owns_residential?(record))
+    (manage_business_resources? || seller?) && assigned_to_residential?(record)
   end
 end

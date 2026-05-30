@@ -5,7 +5,11 @@ class ClientPolicy < ApplicationPolicy
     def resolve
       return scope.none unless user
 
-      return scope.all if staff? || seller?
+      return scope.all if super_user?
+
+      return scope.where(id: user.client_id) if client? && user.client_id.present?
+
+      return scope.joins(:residentials).where(residentials: { id: assigned_residential_ids }).distinct if staff? || seller?
 
       scope.none
     end
@@ -16,7 +20,7 @@ class ClientPolicy < ApplicationPolicy
   end
 
   def show?
-    staff? || seller?
+    client_visible?(record)
   end
 
   def create?
@@ -24,10 +28,12 @@ class ClientPolicy < ApplicationPolicy
   end
 
   def update?
-    manage_business_resources?
+    return true if client? && user.client_id.present? && record.id == user.client_id
+
+    manage_business_resources? && client_visible?(record)
   end
 
   def destroy?
-    manage_business_resources?
+    manage_business_resources? && client_visible?(record)
   end
 end

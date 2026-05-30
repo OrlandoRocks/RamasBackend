@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_08_01_120000) do
+ActiveRecord::Schema[7.0].define(version: 2026_08_02_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
@@ -169,16 +169,34 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_01_120000) do
     t.index ["contract_id"], name: "index_payments_on_contract_id"
   end
 
+  create_table "residential_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "residential_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["residential_id"], name: "index_residential_assignments_on_residential_id"
+    t.index ["user_id", "residential_id"], name: "index_residential_assignments_on_user_and_residential", unique: true
+    t.index ["user_id"], name: "index_residential_assignments_on_user_id"
+  end
+
+  create_table "residential_clients", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "residential_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id", "residential_id"], name: "index_residential_clients_on_client_and_residential", unique: true
+    t.index ["client_id"], name: "index_residential_clients_on_client_id"
+    t.index ["residential_id"], name: "index_residential_clients_on_residential_id"
+  end
+
   create_table "residentials", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.decimal "cost"
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.geography "boundary", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
     t.index ["boundary"], name: "index_residentials_on_boundary", using: :gist
-    t.index ["user_id"], name: "index_residentials_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -210,7 +228,10 @@ ActiveRecord::Schema[7.0].define(version: 2026_08_01_120000) do
   add_foreign_key "geo_layers", "residentials"
   add_foreign_key "lands", "residentials"
   add_foreign_key "payments", "contracts"
-  add_foreign_key "residentials", "users"
+  add_foreign_key "residential_assignments", "residentials"
+  add_foreign_key "residential_assignments", "users"
+  add_foreign_key "residential_clients", "clients"
+  add_foreign_key "residential_clients", "residentials"
   add_foreign_key "users", "clients"
   add_foreign_key "users", "roles"
 end

@@ -5,10 +5,10 @@ class PaymentPolicy < ApplicationPolicy
     def resolve
       return scope.none unless user
 
-      return scope.all if staff?
+      return scope.all if super_user?
 
-      if seller?
-        return scope.joins(contract: { land: :residential }).where(residentials: { user_id: user.id })
+      if staff? || seller?
+        return scope.joins(contract: { land: { residential: :users } }).where(users: { id: user.id }).distinct
       end
 
       if client? && user.client_id.present?
@@ -24,22 +24,23 @@ class PaymentPolicy < ApplicationPolicy
   end
 
   def show?
-    manage_business_resources? ||
-      (seller? && seller_owns_contract?(record.contract)) ||
-      client_owns_contract?(record.contract)
+    client_owns_contract?(record.contract) ||
+      ((manage_business_resources? || seller?) && assigned_to_residential?(record.contract&.land&.residential))
   end
 
   def create?
-    manage_business_resources? ||
-      (seller? && seller_owns_contract?(record.contract))
+    (manage_business_resources? || seller?) && assigned_to_residential?(record.contract&.land&.residential)
   end
 
   def update?
-    manage_business_resources?
+    return false if client?
+
+    (manage_business_resources? || seller?) &&
+      assigned_to_residential?(record.contract&.land&.residential)
   end
 
   def destroy?
-    manage_business_resources?
+    manage_business_resources? && assigned_to_residential?(record.contract&.land&.residential)
   end
 
   def payment_statuses?
@@ -47,10 +48,6 @@ class PaymentPolicy < ApplicationPolicy
   end
 
   private
-
-  def seller_owns_contract?(contract)
-    contract&.land&.residential&.user_id == user.id
-  end
 
   def client_owns_contract?(contract)
     client? && user.client_id.present? && contract&.client_id == user.client_id

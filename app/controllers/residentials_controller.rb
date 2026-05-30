@@ -43,10 +43,10 @@ class ResidentialsController < ApplicationController
 
   # POST /residentials
   def create
-    @residential = Residential.new(residential_params)
+    @residential = Residential.new(residential_attributes)
     authorize @residential
 
-    if @residential.save
+    if save_residential_with_assignments(@residential)
       render json: @residential, serializer: ResidentialSerializer, status: :created
     else
       render json: @residential.errors, status: :unprocessable_entity
@@ -56,7 +56,9 @@ class ResidentialsController < ApplicationController
   # PATCH/PUT /residentials/1
   def update
     authorize @residential
-    if @residential.update(residential_params)
+
+    @residential.assign_attributes(residential_attributes)
+    if save_residential_with_assignments(@residential)
       params[:lands]&.each do |land_params|
         if land_params[:id].present?
           land = @residential.lands.find(land_params[:id])
@@ -84,7 +86,36 @@ class ResidentialsController < ApplicationController
     @residential = policy_scope(Residential).find(params[:id])
   end
 
+  def residential_attributes
+    residential_params.except(:user_ids)
+  end
+
   def residential_params
-    params.require(:residential).permit(:name, :address, :cost, :user_id, :boundary)
+    params.require(:residential).permit(:name, :address, :cost, :boundary, user_ids: [])
+  end
+
+  def assignment_user_ids
+    ids = params.dig(:residential, :user_ids)
+    return nil if ids.nil?
+
+    ids.reject(&:blank?).map(&:to_i)
+  end
+
+  def save_residential_with_assignments(residential)
+    Residential.transaction do
+      residential.save!
+      sync_assignments!(residential)
+      true
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  def sync_assignments!(residential)
+    ids = assignment_user_ids
+    return if ids.nil?
+
+    assignable = User.where(id: ids).joins(:role).where(roles: { name: %w[user admin super_user] })
+    residential.users = assignable
   end
 end

@@ -72,10 +72,20 @@ class ApplicationPolicy
     super_user? || admin?
   end
 
-  def owns_residential?(residential)
-    return false unless residential && seller?
+  # Whether the user is assigned to this residential (sellers/admins) or is super_user.
+  def assigned_to_residential?(residential)
+    return false unless user && residential
+    return true if super_user?
 
-    residential.user_id == user.id
+    user.residentials.exists?(residential.id)
+  end
+
+  def client_visible?(client)
+    return false unless user && client
+    return true if super_user?
+    return true if client? && user.client_id.present? && client.id == user.client_id
+
+    client.residentials.joins(:users).where(users: { id: user.id }).exists?
   end
 
   class Scope
@@ -112,6 +122,18 @@ class ApplicationPolicy
 
     def staff?
       user&.staff?
+    end
+
+    def assigned_residential_ids
+      @assigned_residential_ids ||= user.residential_ids
+    end
+
+    # Scope a relation that belongs to / joins residentials assigned to this user.
+    def scope_to_assigned_residentials(relation, residential_table: "residentials")
+      return relation.none unless user
+      return relation.all if super_user?
+
+      relation.joins(residential: :users).where(users: { id: user.id })
     end
   end
 end
