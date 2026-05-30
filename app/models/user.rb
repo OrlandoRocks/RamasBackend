@@ -5,7 +5,9 @@ class User < ApplicationRecord
   belongs_to :role
   belongs_to :client, optional: true
   has_many :expenses, dependent: :nullify
-  has_many :residentials, inverse_of: :user, dependent: :destroy
+
+  has_many :residential_assignments, dependent: :destroy
+  has_many :residentials, through: :residential_assignments
 
   has_secure_password
   validates :email, presence: true, uniqueness: true

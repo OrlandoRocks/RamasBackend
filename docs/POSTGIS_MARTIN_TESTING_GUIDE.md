@@ -606,14 +606,20 @@ curl http://localhost:3030/geo_layers
 #### Get a Vector Tile:
 
 ```bash
-# Get tile at zoom 14 for Mexico City area
-curl http://localhost:3030/geo_layers/14/3756/6876.pbf -o test_tile.pbf
-ls -la test_tile.pbf
+# geo_layers — legacy test data (CDMX area, residential 1 in geo_layers_geom)
+curl http://localhost:3030/geo_layers/14/3686/7310 -o test_geo_layers.pbf
+ls -la test_geo_layers.pbf
+
+# lands — imported parcels (e.g. Valle Dorado ~28.39°N, -106.92°W)
+curl http://localhost:3030/lands/14/3325/6843 -o test_lands.pbf
+ls -la test_lands.pbf
 ```
 
 **What this tests:** Martin can generate actual vector tile data.
 
-**Expected output:** A binary .pbf file (Protobuf format)
+**Expected output:** A non-empty binary `.pbf` file. HTTP **204** means no features in that tile (wrong zoom/xy or no geometry in DB).
+
+**Use `lands` tiles** when shapefiles were imported via `POST /lands/import_shapefile`. Use `geo_layers` when imported via `POST /geo_layers/import_shapefile`.
 
 ---
 
@@ -829,6 +835,11 @@ psql -U odela3 -d ramas_dev -c "
 2. Verify Martin is running: `curl http://localhost:3030/catalog`
 3. Check CORS is enabled in Martin config
 4. Verify tile URL is correct in browser network tab
+5. **Center order:** MapLibre `center` must be `[longitude, latitude]` (e.g. `[-106.920402, 28.388290]`)
+6. **Layer source:** Parcels imported to **lands** need the **`lands`** tile source, not `geo_layers`:
+   - `http://localhost:3030/lands/{z}/{x}/{y}`
+7. Filter by development in MapLibre: `["==", ["get", "residential_id"], 3]`
+8. Restart Martin after `martin/martin.yaml` or migration changes: `docker compose restart martin`
 
 ---
 

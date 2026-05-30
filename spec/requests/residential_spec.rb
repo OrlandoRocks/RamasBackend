@@ -3,13 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Residentials" do
-  let(:admin) { create(:user) }
+  let(:admin_role) { Role.find_or_create_by!(name: "admin") }
+  let(:admin) { create(:user, role: admin_role) }
   let!(:residentials) { create_list(:residential, 3) }
-
 
   describe "GET /residentials" do
     context "when the user is an admin" do
       before do
+        residentials.each { |residential| residential.users << admin unless residential.users.include?(admin) }
         sign_in(admin)
       end
       it "returns a successful response and a list of residentials" do

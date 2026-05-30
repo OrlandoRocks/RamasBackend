@@ -10,11 +10,19 @@ cors: true
 postgres:
   connection_string: ${DATABASE_URL}
 
-  # Use function-based source (more reliable than table source)
   functions:
     geo_layers:
       schema: public
       function: geo_layers_mvt
       minzoom: 0
       maxzoom: 22
+      # Legacy test data (CDMX area) in geo_layers_geom
       bounds: [-99.17, 19.40, -99.12, 19.43]
+
+    lands:
+      schema: public
+      function: lands_mvt
+      minzoom: 0
+      maxzoom: 22
+      # Covers imported parcels (e.g. Valle Dorado, Chihuahua) and other developments
+      bounds: [-107.0, 18.5, -98.5, 29.5]

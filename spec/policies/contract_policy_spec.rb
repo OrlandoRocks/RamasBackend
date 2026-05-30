@@ -11,8 +11,12 @@ RSpec.describe ContractPolicy, type: :policy do
   let(:seller) { create(:user, role: seller_role) }
   let(:admin) { create(:user, role: admin_role) }
 
-  let(:seller_residential) { create(:residential, user: seller) }
+  let(:seller_residential) { create(:residential, assigned_user: seller) }
   let(:land) { create(:land, residential: seller_residential) }
+
+  before do
+    create(:residential_assignment, user: admin, residential: seller_residential)
+  end
   let(:client_model) { create(:client) }
   let(:contract) { create(:contract, land: land, client: client_model) }
 

@@ -12,8 +12,12 @@ RSpec.describe ExpensePolicy, type: :policy do
   let(:admin) { create(:user, role: admin_role) }
   let(:client_user) { create(:user, role: client_role) }
 
-  let(:seller_residential) { create(:residential, user: seller) }
+  let(:seller_residential) { create(:residential, assigned_user: seller) }
   let(:expense) { create(:expense, residential: seller_residential, user: seller) }
+
+  before do
+    create(:residential_assignment, user: admin, residential: seller_residential)
+  end
 
   permissions :index? do
     it 'denies client' do
@@ -51,7 +55,8 @@ RSpec.describe ExpensePolicy, type: :policy do
   describe ExpensePolicy::Scope do
     it 'scopes seller to expenses in their residentials' do
       other_residential = create(:residential)
-      other_expense = create(:expense, residential: other_residential, user: other_residential.user)
+      other_seller = create(:user, role: seller_role)
+      other_expense = create(:expense, residential: other_residential, user: other_seller)
 
       resolved = described_class.new(seller, Expense.all).resolve
       expect(resolved).to include(expense)

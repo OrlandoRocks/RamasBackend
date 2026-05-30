@@ -28,4 +28,15 @@ class Contract < ApplicationRecord
            .where(status: Payment.payment_statuses["Pagado"])
            .sum(:amount)
   end
+
+  after_save :link_client_to_residential
+
+  private
+
+  def link_client_to_residential
+    residential_id = land&.residential_id
+    return unless residential_id && client_id
+
+    ResidentialClient.link!(client_id: client_id, residential_id: residential_id)
+  end
 end

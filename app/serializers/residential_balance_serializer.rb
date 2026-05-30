@@ -2,10 +2,37 @@
 
 # serializer for residential model
 class ResidentialBalanceSerializer < ActiveModel::Serializer
-  attributes :id, :name, :address, :cost, :user_id, :user_full_name, :lands_count, :total_expenses, :total_payments, :payments_by_month, :expenses_by_month
+  attributes :id, :name, :address, :cost, :user_ids, :assigned_users, :lands_count, :total_expenses, :total_payments,
+             :payments_by_month, :expenses_by_month
+
+  attribute :user_id
+  attribute :user_full_name
+
+  def user_ids
+    object.user_ids
+  end
+
+  def assigned_users
+    object.users.map do |user|
+      {
+        id: user.id,
+        name: user.name,
+        last_name: user.last_name,
+        email: user.email,
+        role_name: user.role&.name
+      }
+    end
+  end
+
+  def user_id
+    object.users.first&.id
+  end
 
   def user_full_name
-    "#{object.user.name} #{object.user.last_name}"
+    user = object.users.first
+    return nil unless user
+
+    "#{user.name} #{user.last_name}"
   end
 
   def lands_count
@@ -30,10 +57,8 @@ class ResidentialBalanceSerializer < ActiveModel::Serializer
     balance_params = @instance_options[:serializer_options]
 
     if balance_params[:start_date].nil?
-      # Búsqueda anual
       object.payments.where('extract(year from payments.created_at) = ?', balance_params[:year]).sum(:amount)
     else
-      # Búsqueda por mes
       object.payments.where(created_at: @instance_options[:serializer_options][:start_date]..@instance_options[:serializer_options][:end_date]).sum(:amount)
     end
   end
@@ -44,10 +69,8 @@ class ResidentialBalanceSerializer < ActiveModel::Serializer
     balance_params = @instance_options[:serializer_options]
 
     if balance_params[:start_date].nil?
-      # Búsqueda anual
       object.expenses.where('extract(year from expenses.created_at) = ?', balance_params[:year]).sum(:amount)
     else
-      # Búsqueda por mes
       object.expenses.where(created_at: @instance_options[:serializer_options][:start_date]..@instance_options[:serializer_options][:end_date]).sum(:amount)
     end
   end
