@@ -33,38 +33,26 @@ class PaymentsController < ApplicationController
 
   def update
     authorize @payment
-    if @payment.update(payment_params)
-      update_amount(params[:amount]) if params[:amount]
-      render json: @payment, status: :ok
-    else
-      render json: { errors: @payment.errors }, status: :unprocessable_entity
+
+    begin
+      @payment.contract.with_schedule_lock do
+        if @payment.update(payment_params)
+          adjusted = @payment.last_redistribution_adjusted || []
+          response.headers["X-Adjusted-Payments-Count"] = adjusted.size.to_s if amount_param_present?
+          render json: @payment.reload, serializer: PaymentSerializer, status: :ok
+        else
+          render json: { errors: @payment.errors }, status: :unprocessable_entity
+        end
+      end
+    rescue PaymentAmountRedistributor::Error => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
-  end
-
-  def update_amount(new_amount)
-    return if new_amount.blank?
-
-    new_amount = new_amount.to_d
-    pending_scope = @payment.contract.payments.where.not(status: Payment.paid_status_values).order(payment_date: :asc)
-    oldest_payment = pending_scope.last
-    return unless oldest_payment
-
-    if new_amount > @payment.amount
-      oldest_payment.update(amount: oldest_payment.amount + (new_amount - @payment.amount))
-    elsif new_amount < @payment.amount
-      oldest_payment.update(amount: oldest_payment.amount - (@payment.amount - new_amount))
-    end
-
-    oldest_payment.reload
-    return unless oldest_payment.amount <= 0
-
-    oldest_payment.update(status: "Pagado")
   end
 
   def destroy
     authorize @payment
     @payment.destroy
-    render json: { message: 'Payment deleted' }, status: :ok
+    render json: { message: "Payment deleted" }, status: :ok
   end
 
   private
@@ -75,5 +63,12 @@ class PaymentsController < ApplicationController
 
   def payment_params
     params.require(:payment).permit(:amount, :payment_date, :payment_type, :comments, :image_url, :contract_id, :status)
+  end
+
+  def amount_param_present?
+    return true if params.key?(:amount)
+
+    payment = params[:payment]
+    payment.is_a?(ActionController::Parameters) ? payment.key?(:amount) : payment.to_h.key?(:amount)
   end
 end

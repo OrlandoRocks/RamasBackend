@@ -2,6 +2,8 @@
 
 # Description: Payment model that belongs to a land and has one client through land.
 class Payment < ApplicationRecord
+  include PaymentScheduleAdjustment
+
   belongs_to :contract
 
 
@@ -61,5 +63,12 @@ class Payment < ApplicationRecord
 
   def status_name
     self.class.status_label(attributes_before_type_cast["status"])
+  end
+
+  def update_without_redistribution!(attributes)
+    self.skip_amount_redistribution = true
+    update!(attributes)
+  ensure
+    self.skip_amount_redistribution = false
   end
 end

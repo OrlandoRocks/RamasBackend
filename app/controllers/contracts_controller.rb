@@ -26,8 +26,8 @@ class ContractsController < ApplicationController
     @contract = policy_scope(Contract).find(params[:id])
     authorize @contract, :payments?
 
-    @payments = @contract.payments
-    render json: @payments
+    @payments = @contract.payments.order(payment_date: :asc, id: :asc)
+    render json: @payments, each_serializer: PaymentScheduleSerializer
   end
 
   # POST /contracts
@@ -51,11 +51,16 @@ class ContractsController < ApplicationController
   # @return [void]
   def update
     authorize @contract
-    if @contract.update(contract_params)
-      render json: @contract
-    else
-      render json: @contract.errors, status: :unprocessable_entity
+
+    @contract.with_schedule_lock do
+      if @contract.update(contract_params)
+        render json: @contract
+      else
+        render json: @contract.errors, status: :unprocessable_entity
+      end
     end
+  rescue PaymentAmountRedistributor::Error => e
+    render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 
   # DELETE /contracts/1

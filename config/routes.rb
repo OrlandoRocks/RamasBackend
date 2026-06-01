@@ -32,7 +32,11 @@ Rails.application.routes.draw do
   end
   resources :expenses
   resources :contracts
-  resources :payments
+  resources :payments do
+    collection do
+      get :payment_statuses
+    end
+  end
 
   resources :geo_layers do
     collection do

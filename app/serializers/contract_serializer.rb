@@ -25,5 +25,5 @@ class ContractSerializer < ActiveModel::Serializer
   belongs_to :client
   belongs_to :land
 
-  has_many :payments, serializer: PaymentSerializer
+  has_many :payments, serializer: PaymentScheduleSerializer
 end
