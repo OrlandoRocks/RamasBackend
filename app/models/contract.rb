@@ -2,6 +2,8 @@
 
 # Description: Contract model that belongs to a client and a land and has many users.
 class Contract < ApplicationRecord
+  include ContractPaymentSchedule
+
   belongs_to :client
   belongs_to :land
 

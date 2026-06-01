@@ -2,8 +2,8 @@
 
 # serializer for payment model
 class PaymentSerializer < ActiveModel::Serializer
-  attributes :id, :amount, :payment_date, :payment_type, :comments, :image_url, :client_name, :payment_status_name,
-             :land_code, :land_address, :residential_name, :status
+  attributes :id, :contract_id, :amount, :payment_date, :payment_type, :comments, :image_url, :client_name,
+             :payment_status_name, :land_code, :land_address, :residential_name, :status
 
 
   def payment_status_name
